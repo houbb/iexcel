@@ -31,6 +31,7 @@
         <!--============================== OTHER ==============================-->
         <junit.version>5.2.0</junit.version>
         <apiguardian-api.version>1.0.0</apiguardian-api.version>
+        <poi-version>3.17</poi-version>
     </properties>
 
 
@@ -63,6 +64,28 @@
                 <optional>true</optional>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>1.9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.14</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -74,7 +97,6 @@
             <artifactId>log-integration</artifactId>
         </dependency>
 
-
         <!--============================== OTHER ==============================-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -84,6 +106,20 @@
         <dependency>
             <groupId>org.apiguardian</groupId>
             <artifactId>apiguardian-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
         </dependency>
 
     </dependencies>

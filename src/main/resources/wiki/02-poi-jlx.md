@@ -16,6 +16,11 @@ apache 工具
 
 http://www.datypic.com/sc/ooxml/ss.html
 
+
+## 解决 OOM 的方式
+
+[使用POI进行数据导出excel时的OOM服务挂掉，cpu飙升的问题](https://blog.csdn.net/doujinlong1/article/details/80780823)
+
 # jxl
 
 [jxl 介绍](https://blog.csdn.net/qq_37057095/article/details/75460346)

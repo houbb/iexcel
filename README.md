@@ -7,6 +7,18 @@
 [![Coverage Status](https://coveralls.io/repos/github/houbb/${artifactId}/badge.svg?branch=master)](https://coveralls.io/github/houbb/${artifactId}?branch=master)
 
 
+本项目初期全部参考自：
+
+[easyexcel](https://github.com/alibaba/easyexcel)
+
+## 优化点
+
+- 复杂的逻辑
+
+- 移除观察者模式
+
+- 规范注释
+
 # 变更日志
 
 > [变更日志](doc/CHANGELOG.md)
