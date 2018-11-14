@@ -34,25 +34,16 @@
         <poi-version>3.17</poi-version>
     </properties>
 
-
-
     <dependencyManagement>
 
         <dependencies>
-
             <!--============================== INTER ==============================-->
-            <dependency>
-                <groupId>com.github.houbb</groupId>
-                <artifactId>log-integration</artifactId>
-                <version>${log-integration.version}</version>
-            </dependency>
-
 
             <!--============================== OTHER ==============================-->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.2.0</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
                 <optional>true</optional>
             </dependency>
@@ -74,29 +65,11 @@
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi-version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils</artifactId>
-                <version>1.9.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>1.14</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
 
     <dependencies>
-        <!--============================== INTER ==============================-->
-        <dependency>
-            <groupId>com.github.houbb</groupId>
-            <artifactId>log-integration</artifactId>
-        </dependency>
-
         <!--============================== OTHER ==============================-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -116,12 +89,6 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -150,7 +117,7 @@
 
     <!--============================== ADD For sonatype START ==============================-->
     <name>iexcel</name>
-    <description>iexcel(2018-07-30 21:35:42)</description>
+    <description>IExcel is a java tool for excel write and read.</description>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>

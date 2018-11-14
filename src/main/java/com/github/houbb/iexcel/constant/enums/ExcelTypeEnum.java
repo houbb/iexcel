@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
- * @author jipengfei
+ * excel 类型常量
+ * @author houbinbin
  */
 public enum ExcelTypeEnum {
     /**
