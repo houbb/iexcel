@@ -11,6 +11,7 @@ import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.style.StyleSet;
 import com.github.houbb.iexcel.util.BeanUtil;
+import com.github.houbb.iexcel.util.ClassUtil;
 import com.github.houbb.iexcel.util.CollUtil;
 import com.github.houbb.iexcel.util.StrUtil;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
@@ -101,24 +102,33 @@ public abstract class BaseExcelWriter implements IExcelWriter {
 
     @Override
     public IExcelWriter write(Collection<?> data) {
+        // 快速返回
+        if(CollUtil.isEmpty(data)) {
+            return this;
+        }
+
+        // 状态校验
         checkClosedStatus();
         checkRowNum(data.size());
 
+        // 结果转换
         Collection<?> convertData = convertCollectionData(data);
 
-        int index = 0;
-        for (Object object : convertData) {
-            if(index == 0) {
-                initHeaderAlias(object);
-                InnerExcelUtil.checkColumnNum(headerAliasMap.size());
-                writeHeadRow(headerAliasMap.values());
-            }
+        // 生成 excel 文件
+        // 处理第一条数据信息
+        Iterator iterator = convertData.iterator();
+        Object firstLine = iterator.next();
+        initHeaderAlias(firstLine);
+        InnerExcelUtil.checkColumnNum(headerAliasMap.size());
+        writeHeadRow(headerAliasMap.values());
 
-            // 转换为 iter
-            Iterable<?> values = buildRowValues(object);
+        // 处理后续行的信息
+        while(iterator.hasNext()) {
+            Object line = iterator.next();
+            Iterable<?> values = buildRowValues(line);
             writeRow(values);
-            index++;
         }
+
         return this;
     }
 
@@ -181,13 +191,12 @@ public abstract class BaseExcelWriter implements IExcelWriter {
      */
     private List<Object> convertMap2List(Iterable<Map<String, Object>> results, final Class<?> clazz) {
         try {
-            Field[] fields = clazz.getDeclaredFields();
+            List<Field> fieldList = ClassUtil.getAllFieldList(clazz);
             List<Object> resultList = new ArrayList<>();
 
             for (Map<String, Object> result : results) {
                 Object pojo = clazz.newInstance();
-                for (Field field : fields) {
-                    field.setAccessible(true);
+                for (Field field : fieldList) {
                     String fieldName = getFieldName(field);
                     Object fieldValue = result.get(fieldName);
                     // 对于基本类型默认值的处理 避免报错

@@ -22,7 +22,6 @@ public class BeanUtil {
             List<Field> fieldList = ClassUtil.getAllFieldList(bean.getClass());
 
             for (Field field : fieldList) {
-                field.setAccessible(true);
                 final String fieldName = field.getName();
                 final Object fieldValue = field.get(bean);
                 map.put(fieldName, fieldValue);

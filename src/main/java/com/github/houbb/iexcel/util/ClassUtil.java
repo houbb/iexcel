@@ -1,5 +1,7 @@
 package com.github.houbb.iexcel.util;
 
+import com.github.houbb.iexcel.cache.BeanFieldCache;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -21,12 +23,23 @@ public class ClassUtil {
      * @return 字段列表
      */
     public static List<Field> getAllFieldList(final Class clazz) {
+        List<Field> resultList = BeanFieldCache.INSTANCE.get(clazz);
+        if(CollUtil.isNotEmpty(resultList)) {
+            return resultList;
+        }
+
+        // 构建并且缓存
         List<Field> fieldList = new ArrayList<>() ;
         Class tempClass = clazz;
         while (tempClass != null) {
             fieldList.addAll(Arrays.asList(tempClass.getDeclaredFields()));
             tempClass = tempClass.getSuperclass();
         }
+
+        for(Field field : fieldList) {
+            field.setAccessible(true);
+        }
+        BeanFieldCache.INSTANCE.put(clazz, fieldList);
         return fieldList;
     }
 

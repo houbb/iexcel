@@ -20,7 +20,7 @@ public class ExcelWriterTest {
 
     @Test
     public void onceWriteAndFlushTest() {
-        final String path = "D:\\github\\iexcel\\src\\test\\java\\com\\github\\houbb\\iexcel\\test\\3.xlsx";
+        final String path = "3.xlsx";
         List<ExcelFieldModel> modelList = new ArrayList();
         ExcelFieldModel indexModel = new ExcelFieldModel();
         indexModel.setName("你好");
@@ -34,7 +34,7 @@ public class ExcelWriterTest {
 
     @Test
     public void listBeanTest() throws FileNotFoundException {
-        final String path = "D:\\github\\iexcel\\src\\test\\java\\com\\github\\houbb\\iexcel\\test\\1.xlsx";
+        final String path = "1.xlsx";
         List<ExcelFieldModel> modelList = new ArrayList();
         ExcelFieldModel indexModel = new ExcelFieldModel();
         indexModel.setName("你好");
@@ -53,8 +53,30 @@ public class ExcelWriterTest {
     }
 
     @Test
+    public void bigListBeanTest() throws FileNotFoundException {
+        final String path = "5.xlsx";
+        List<ExcelFieldModel> modelList = new ArrayList();
+        for(int i = 0; i < 100000; i++) {
+            ExcelFieldModel indexModel = new ExcelFieldModel();
+            indexModel.setName("你好");
+            indexModel.setAge("10");
+            indexModel.setAddress("地址");
+            indexModel.setEmail("1@qq.com");
+            modelList.add(indexModel);
+        }
+
+        try(OutputStream outputStream = new FileOutputStream(path);
+            IExcelWriter writer = ExcelUtil.getExcelWriter(ExcelTypeEnum.XLSX);) {
+            writer.write(modelList);
+            writer.flush(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void mapListTest() {
-        final String path = "D:\\github\\iexcel\\src\\test\\java\\com\\github\\houbb\\iexcel\\test\\2.xls";
+        final String path = "2.xls";
 
         Map<String, Object> map = new HashMap<>();
         map.put("name", "名字");

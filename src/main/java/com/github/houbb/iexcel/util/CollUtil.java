@@ -19,4 +19,14 @@ public class CollUtil {
         return collection == null || collection.isEmpty();
     }
 
+    /**
+     * 集合是否不为空
+     *
+     * @param collection 集合
+     * @return 是否为空
+     */
+    public static boolean isNotEmpty(Collection<?> collection) {
+        return !isEmpty(collection);
+    }
+
 }
