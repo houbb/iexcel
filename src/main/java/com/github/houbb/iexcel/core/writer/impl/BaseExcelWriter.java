@@ -310,7 +310,7 @@ public abstract class BaseExcelWriter implements IExcelWriter {
                 final String fieldName = field.getName();
                 String headName = excel.headName();
                 headName = StrUtil.isNotBlank(headName) ? headName : fieldName;
-                if (excel.excelRequire()) {
+                if (excel.writeRequire()) {
                     headerAliasMap.put(fieldName, headName);
                 }
             }

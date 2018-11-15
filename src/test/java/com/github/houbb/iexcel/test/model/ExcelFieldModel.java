@@ -18,10 +18,10 @@ public class ExcelFieldModel {
     @ExcelField(headName = "年龄")
     private String age;
 
-    @ExcelField(mapKey = "EMAIL", excelRequire = false)
+    @ExcelField(mapKey = "EMAIL", writeRequire = false)
     private String email;
 
-    @ExcelField(mapKey = "ADDRESS", headName = "地址", excelRequire = true)
+    @ExcelField(mapKey = "ADDRESS", headName = "地址", writeRequire = true)
     private String address;
 
     public String getName() {
