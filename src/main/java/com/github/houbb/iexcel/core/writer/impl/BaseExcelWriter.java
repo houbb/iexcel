@@ -1,15 +1,19 @@
 package com.github.houbb.iexcel.core.writer.impl;
 
 
+import com.github.houbb.iexcel.annotation.ExcelConverter;
 import com.github.houbb.iexcel.annotation.ExcelField;
-import com.github.houbb.iexcel.constant.SheetConst;
+import com.github.houbb.iexcel.constant.ExcelConst;
+import com.github.houbb.iexcel.core.conventer.IExcelConverter;
+import com.github.houbb.iexcel.core.conventer.IExcelConverterFactory;
+import com.github.houbb.iexcel.core.conventer.impl.DefaultExcelConverterFactory;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
-import com.github.houbb.iexcel.support.style.StyleSet;
+import com.github.houbb.iexcel.style.StyleSet;
 import com.github.houbb.iexcel.util.BeanUtil;
+import com.github.houbb.iexcel.util.CollUtil;
 import com.github.houbb.iexcel.util.StrUtil;
-import com.github.houbb.iexcel.util.excel.ExcelCheckUtil;
-import com.github.houbb.iexcel.util.excel.RowUtil;
+import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -57,15 +61,28 @@ public abstract class BaseExcelWriter implements IExcelWriter {
      */
     private Sheet sheet;
 
+    /**
+     * 类型转换器工厂
+     */
+    private IExcelConverterFactory converterFactory;
 
     public BaseExcelWriter() {
-        this(null);
+        this(null, null);
     }
 
     public BaseExcelWriter(final String sheetName) {
+        this(sheetName, null);
+    }
+
+    public BaseExcelWriter(final String sheetName,
+                           final IExcelConverterFactory converterFactory) {
         this.workbook = getWorkbook();
+        // 使用默认的 excel 转换工厂
+        if(converterFactory == null) {
+            this.converterFactory = new DefaultExcelConverterFactory();
+        }
         final String realSheetName = StrUtil.isBlank(sheetName)
-                ? SheetConst.DEFAULT_SHEET_NAME : sheetName;
+                ? ExcelConst.DEFAULT_SHEET_NAME : sheetName;
         this.sheet = workbook.createSheet(realSheetName);
         this.styleSet = new StyleSet(workbook);
     }
@@ -82,23 +99,18 @@ public abstract class BaseExcelWriter implements IExcelWriter {
      */
     protected abstract int getMaxRowNumLimit();
 
-    private void checkRowNum(int dataSize) {
-        int limit = getMaxRowNumLimit();
-        if(dataSize > limit) {
-            throw new ExcelRuntimeException("超出最大行数限制");
-        }
-    }
-
     @Override
     public IExcelWriter write(Collection<?> data) {
         checkClosedStatus();
         checkRowNum(data.size());
 
+        Collection<?> convertData = convertCollectionData(data);
+
         int index = 0;
-        for (Object object : data) {
+        for (Object object : convertData) {
             if(index == 0) {
                 initHeaderAlias(object);
-                ExcelCheckUtil.checkColumnNum(headerAliasMap.size());
+                InnerExcelUtil.checkColumnNum(headerAliasMap.size());
                 writeHeadRow(headerAliasMap.values());
             }
 
@@ -108,6 +120,50 @@ public abstract class BaseExcelWriter implements IExcelWriter {
             index++;
         }
         return this;
+    }
+
+    /**
+     * 转换器转换数据
+     * 如果列表为空或者转换器不存在，则不进行转换。
+     * @param originalData 原始数据列表
+     * @return 转换后的结果
+     */
+    private Collection<?> convertCollectionData(Collection<?> originalData) {
+        if(CollUtil.isEmpty(originalData)) {
+            return originalData;
+        }
+
+        final Object firstElem = originalData.iterator().next();
+        Optional<IExcelConverter> excelConverterOptional = getExcelConverter(firstElem);
+        if(!excelConverterOptional.isPresent()) {
+            return originalData;
+        }
+
+        IExcelConverter excelConverter = excelConverterOptional.get();
+        return excelConverter.convert(originalData);
+    }
+
+    /**
+     * 获取对应的 excel 转换器
+     * @param object 对象
+     * @return excel 转换器
+     */
+    private Optional<IExcelConverter> getExcelConverter(Object object) {
+        if(null == object) {
+            return Optional.empty();
+        }
+
+        Class clazz = object.getClass();
+        if (clazz.isAnnotationPresent(ExcelConverter.class)) {
+            ExcelConverter excelConverter = (ExcelConverter) clazz.getAnnotation(ExcelConverter.class);
+            Class<? extends IExcelConverter> excelConverterClass = excelConverter.value();
+            IExcelConverter iExcelConverter = converterFactory.getConverter(excelConverterClass);
+            if(iExcelConverter == null) {
+                throw new ExcelRuntimeException("无法找到对应的转换器");
+            }
+            return Optional.of(iExcelConverter);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -193,12 +249,13 @@ public abstract class BaseExcelWriter implements IExcelWriter {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // 清空对象
         this.headerAliasMap = null;
         this.currentRow = null;
         this.isClosed = true;
 
+        this.converterFactory = null;
         this.styleSet = null;
         this.workbook = null;
         this.sheet = null;
@@ -210,7 +267,7 @@ public abstract class BaseExcelWriter implements IExcelWriter {
      * 如果没有，则视为没有字段需要写入。
      */
     private void writeHeadRow(final Iterable<?> headRowData) {
-        RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()),
+        InnerExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()),
                 headRowData, this.styleSet,
                 true);
     }
@@ -222,7 +279,7 @@ public abstract class BaseExcelWriter implements IExcelWriter {
      * @param rowData 一行的数据
      */
     private void writeRow(final Iterable<?> rowData) {
-        RowUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()),
+        InnerExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()),
                 rowData, this.styleSet,
                 false);
     }
@@ -261,6 +318,17 @@ public abstract class BaseExcelWriter implements IExcelWriter {
     private void checkClosedStatus() {
         if(this.isClosed) {
             throw new ExcelRuntimeException("ExcelWriter has been closed!");
+        }
+    }
+
+    /**
+     * 校验行数
+     * @param dataSize 数据大小
+     */
+    private void checkRowNum(int dataSize) {
+        int limit = getMaxRowNumLimit();
+        if(dataSize > limit) {
+            throw new ExcelRuntimeException("超出最大行数限制");
         }
     }
 

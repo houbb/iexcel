@@ -9,6 +9,11 @@ package com.github.houbb.iexcel.constant;
 public interface ExcelConst {
 
     /**
+     * 默认的 sheet 名称
+     */
+    String DEFAULT_SHEET_NAME = "sheet1";
+
+    /**
      * 最大列数限制
      */
     int MAX_COLUMNS_LIMIT = 256;

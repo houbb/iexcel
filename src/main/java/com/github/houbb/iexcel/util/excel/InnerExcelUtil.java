@@ -1,21 +1,52 @@
 package com.github.houbb.iexcel.util.excel;
 
-import com.github.houbb.iexcel.support.style.StyleSet;
+import com.github.houbb.iexcel.constant.ExcelConst;
+import com.github.houbb.iexcel.exception.ExcelRuntimeException;
+import com.github.houbb.iexcel.style.StyleSet;
 import com.github.houbb.iexcel.util.StrUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.Row;
 
 import java.util.Calendar;
 import java.util.Date;
 
 /**
- * 方法直接来自 hutool
- * Excel表格中单元格工具类
+ * 内部 EXCEL 工具类
  * @author binbin.hou
- * @date 2018/11/14 14:39
+ * @date 2018/11/14 20:06
  */
-public class CellUtil {
+public final class InnerExcelUtil {
+
+    /**
+     * 校验列的数量
+     * @param size 数量
+     */
+    public static void checkColumnNum(final int size) {
+        if(size <= 0
+                || size > ExcelConst.MAX_COLUMNS_LIMIT) {
+            throw new ExcelRuntimeException("excel 列数不在正确范围内");
+        }
+    }
+
+    /**
+     * 写一行数据
+     *
+     * @param row 行
+     * @param rowData 一行的数据
+     * @param styleSet 单元格样式集，包括日期等样式
+     * @param isHeader 是否为标题行
+     */
+    public static void writeRow(Row row, Iterable<?> rowData, StyleSet styleSet, boolean isHeader) {
+        int i = 0;
+        Cell cell;
+        for (Object value : rowData) {
+            cell = row.createCell(i);
+            InnerExcelUtil.setCellValue(cell, value, styleSet, isHeader);
+            i++;
+        }
+    }
 
     /**
      * 设置单元格值<br>
@@ -27,7 +58,7 @@ public class CellUtil {
      * @param styleSet 单元格样式集，包括日期等样式
      * @param isHeader 是否为标题单元格
      */
-    public static void setCellValue(Cell cell, Object value, StyleSet styleSet, boolean isHeader) {
+    private static void setCellValue(Cell cell, Object value, StyleSet styleSet, boolean isHeader) {
         final CellStyle headCellStyle = styleSet.getHeadCellStyle();
         final CellStyle cellStyle = styleSet.getCellStyle();
         if(isHeader && null != headCellStyle) {

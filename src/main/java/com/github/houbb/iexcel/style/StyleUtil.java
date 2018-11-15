@@ -1,6 +1,5 @@
-package com.github.houbb.iexcel.support.style;
+package com.github.houbb.iexcel.style;
 
-import com.github.houbb.iexcel.util.StrUtil;
 import org.apache.poi.ss.usermodel.*;
 
 /**
@@ -9,17 +8,6 @@ import org.apache.poi.ss.usermodel.*;
  * @date 2018/11/14 17:30
  */
 public class StyleUtil {
-
-    /**
-     * 克隆新的{@link CellStyle}
-     *
-     * @param cell 单元格
-     * @param cellStyle 被复制的样式
-     * @return {@link CellStyle}
-     */
-    public static CellStyle cloneCellStyle(Cell cell, CellStyle cellStyle) {
-        return cloneCellStyle(cell.getSheet().getWorkbook(), cellStyle);
-    }
 
     /**
      * 克隆新的{@link CellStyle}
@@ -97,43 +85,6 @@ public class StyleUtil {
         cellStyle.setFillPattern(fillPattern);
         return cellStyle;
     }
-
-    /**
-     * 创建字体
-     *
-     * @param workbook {@link Workbook}
-     * @param color 字体颜色
-     * @param fontSize 字体大小
-     * @param fontName 字体名称，可以为null使用默认字体
-     * @return {@link Font}
-     */
-    public static Font createFont(Workbook workbook, short color, short fontSize, String fontName) {
-        final Font font = workbook.createFont();
-        return setFontStyle(font, color, fontSize, fontName);
-    }
-
-    /**
-     * 设置字体样式
-     *
-     * @param font 字体{@link Font}
-     * @param color 字体颜色
-     * @param fontSize 字体大小
-     * @param fontName 字体名称，可以为null使用默认字体
-     * @return {@link Font}
-     */
-    public static Font setFontStyle(Font font, short color, short fontSize, String fontName) {
-        if(color > 0) {
-            font.setColor(color);
-        }
-        if(fontSize > 0) {
-            font.setFontHeightInPoints(fontSize);
-        }
-        if(StrUtil.isNotBlank(fontName)) {
-            font.setFontName(fontName);
-        }
-        return font;
-    }
-
 
     /**
      * 创建默认普通单元格样式

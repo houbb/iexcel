@@ -36,7 +36,7 @@ public class ClassUtil {
      * @param clazz 类
      * @return 是否为抽象类
      */
-    public static boolean isAbstract(Class<?> clazz) {
+    private static boolean isAbstract(Class<?> clazz) {
         return Modifier.isAbstract(clazz.getModifiers());
     }
 

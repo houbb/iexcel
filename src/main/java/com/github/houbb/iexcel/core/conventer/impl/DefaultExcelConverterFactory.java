@@ -11,7 +11,7 @@ import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 public class DefaultExcelConverterFactory implements IExcelConverterFactory {
 
     @Override
-    public IExcelConverter convert(Class<? extends IExcelConverter> converterClass) {
+    public IExcelConverter getConverter(Class<? extends IExcelConverter> converterClass) {
         try {
             return converterClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {

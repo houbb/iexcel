@@ -1,12 +1,8 @@
 package com.github.houbb.iexcel.constant.enums;
 
-import org.apache.poi.poifs.filesystem.FileMagic;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 /**
  * excel 类型常量
+ *
  * @author houbinbin
  */
 public enum ExcelTypeEnum {
@@ -26,27 +22,9 @@ public enum ExcelTypeEnum {
      */
     private final String value;
 
-    private ExcelTypeEnum(String value) {
+    ExcelTypeEnum(String value) {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
 
-    public static ExcelTypeEnum valueOf(InputStream inputStream){
-        try {
-            FileMagic fileMagic =  FileMagic.valueOf(inputStream);
-            if(FileMagic.OLE2.equals(fileMagic)){
-                return XLS;
-            }
-            if(FileMagic.OOXML.equals(fileMagic)){
-                return XLSX;
-            }
-            // i18n
-            throw new IllegalArgumentException("excelTypeEnum can not null");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

@@ -11,6 +11,6 @@ public interface IExcelConverterFactory {
      * @param converterClass 转换的 class 信息
      * @return 转换后的结果
      */
-    IExcelConverter convert(final Class<? extends IExcelConverter> converterClass);
+    IExcelConverter getConverter(final Class<? extends IExcelConverter> converterClass);
 
 }
