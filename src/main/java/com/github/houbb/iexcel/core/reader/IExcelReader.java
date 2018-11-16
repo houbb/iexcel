@@ -9,9 +9,22 @@ import java.util.Map;
  */
 public interface IExcelReader {
 
+    /**
+     * 读取当前 sheet 的所有信息
+     * @param tClass 对应的 javabean 类型
+     * @param <T> 泛型
+     * @return 对象列表
+     */
     <T> List<T> readAll(Class<T> tClass);
 
-    List<Map<String, Object>> readAll();
-
+    /**
+     * 读取指定范围内的
+     * @param tClass 泛型
+     * @param startIndex 开始的行信息
+     * @param endIndex 结束的行信息
+     * @param <T> 泛型
+     * @return 读取的对象列表
+     */
+    <T> List<T> read(Class<T> tClass, final int startIndex, final int endIndex);
 
 }

@@ -40,13 +40,4 @@ public @interface ExcelField {
      */
     boolean readRequire() default true;
 
-//    /**
-//     * 当前字段处于 excel 的第几列。
-//     * 这属于和 headName 不同的形式。一个包含表头，一个不包含表头。
-//     * 优先使用 headName 如果没有则使用 index?
-//     *
-//     * @return index
-//     */
-//    int index() default 0;
-
 }

@@ -7,7 +7,14 @@ package com.github.houbb.iexcel.util;
  */
 public class StrUtil {
 
+    /**
+     * 小数点
+     */
+    public static final char C_DOT = '.';
+
     public static final String EMPTY = "";
+
+
 
     // ------------------------------------------------------------------------ Blank
     /**
