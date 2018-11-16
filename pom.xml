@@ -32,6 +32,7 @@
         <junit.version>5.2.0</junit.version>
         <apiguardian-api.version>1.0.0</apiguardian-api.version>
         <poi-version>3.17</poi-version>
+        <xercesImpl.version>2.11.0</xercesImpl.version>
     </properties>
 
     <dependencyManagement>
@@ -64,6 +65,12 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>${xercesImpl.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

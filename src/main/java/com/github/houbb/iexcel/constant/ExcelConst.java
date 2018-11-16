@@ -14,6 +14,11 @@ public interface ExcelConst {
     String DEFAULT_SHEET_NAME = "sheet1";
 
     /**
+     * 默认的 sheet 索引
+     */
+    int DEFAULT_SHEET_INDEX = 0;
+
+    /**
      * 最大列数限制
      */
     int MAX_COLUMNS_LIMIT = 256;

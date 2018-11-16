@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author binbin.hou
  * @date 2018/11/14 13:56
  */
-public abstract class BaseExcelWriter implements IExcelWriter {
+public abstract class AbstractExcelWriter implements IExcelWriter {
 
     /**
      * 当前行
@@ -67,16 +67,16 @@ public abstract class BaseExcelWriter implements IExcelWriter {
      */
     private IExcelConverterFactory converterFactory;
 
-    public BaseExcelWriter() {
+    public AbstractExcelWriter() {
         this(null, null);
     }
 
-    public BaseExcelWriter(final String sheetName) {
+    public AbstractExcelWriter(final String sheetName) {
         this(sheetName, null);
     }
 
-    public BaseExcelWriter(final String sheetName,
-                           final IExcelConverterFactory converterFactory) {
+    public AbstractExcelWriter(final String sheetName,
+                               final IExcelConverterFactory converterFactory) {
         this.workbook = getWorkbook();
         // 使用默认的 excel 转换工厂
         if(converterFactory == null) {

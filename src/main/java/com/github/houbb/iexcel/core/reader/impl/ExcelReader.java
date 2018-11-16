@@ -28,7 +28,7 @@ import java.util.*;
  * @author binbin.hou
  * @date 2018/11/15 20:00
  */
-public class ExcelReader implements IExcelReader {
+public class ExcelReader<T> implements IExcelReader<T> {
 
     //region 私有变量
     /**
@@ -56,7 +56,6 @@ public class ExcelReader implements IExcelReader {
 
     public ExcelReader(File excelFile, String sheetName) {
         Workbook workbook = initWorkbook(excelFile);
-        int sheetNum = workbook.getNumberOfSheets();
         if(StrUtil.isBlank(sheetName)) {
             sheetName = ExcelConst.DEFAULT_SHEET_NAME;
         }
@@ -81,18 +80,17 @@ public class ExcelReader implements IExcelReader {
      * 读取所有的信息
      * 1. 这里的第一行怎么处理 表头的信息？还是按照和导出保持一致？
      * @param tClass 类
-     * @param <T> 泛型
      * @return 列表
      */
     @Override
-    public <T> List<T> readAll(Class<T> tClass) {
+    public List<T> readAll(Class<T> tClass) {
         int firstRowNum = sheet.getFirstRowNum();
         int lastRowNum = sheet.getLastRowNum();
         return read(tClass, firstRowNum, lastRowNum);
     }
 
     @Override
-    public <T> List<T> read(Class<T> tClass, int startIndex, int endIndex) {
+    public List<T> read(Class<T> tClass, int startIndex, int endIndex) {
         List<T> resultList = new ArrayList<>();
 
         int firstRowNum = sheet.getFirstRowNum();

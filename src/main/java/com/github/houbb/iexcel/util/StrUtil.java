@@ -13,6 +13,10 @@ public class StrUtil {
     public static final char C_DOT = '.';
 
     public static final String EMPTY = "";
+    public static final String DOT = ".";
+    public static final String SLASH = "/";
+    public static final String COLON = ":";
+    public static final String DOUBLE_QUOTE = "\"";
 
 
 

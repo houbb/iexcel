@@ -10,7 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author binbin.hou
  * @date 2018/11/14 13:56
  */
-public class XSSFExcelWriter extends BaseExcelWriter {
+public class XSSFExcelWriter extends AbstractExcelWriter {
 
     public XSSFExcelWriter() {
     }

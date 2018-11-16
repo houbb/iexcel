@@ -19,6 +19,20 @@ import java.util.*;
 public class ExcelWriterTest {
 
     @Test
+    public void onceWriteAndFlush03Test() {
+        final String path = "5.xls";
+        List<ExcelFieldModel> modelList = new ArrayList();
+        ExcelFieldModel indexModel = new ExcelFieldModel();
+        indexModel.setName("你好");
+        indexModel.setAge("10");
+        indexModel.setAddress("地址");
+        indexModel.setEmail("1@qq.com");
+        modelList.add(indexModel);
+
+        ExcelUtil.onceWriteAndFlush(ExcelTypeEnum.XLS, null, modelList, path);
+    }
+
+    @Test
     public void onceWriteAndFlushTest() {
         final String path = "3.xlsx";
         List<ExcelFieldModel> modelList = new ArrayList();

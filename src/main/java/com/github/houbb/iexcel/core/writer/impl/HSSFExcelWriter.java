@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author binbin.hou
  * @date 2018/11/14 13:56
  */
-public class HSSFExcelWriter extends BaseExcelWriter {
+public class HSSFExcelWriter extends AbstractExcelWriter {
 
     public HSSFExcelWriter() {
     }
