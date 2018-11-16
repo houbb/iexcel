@@ -1,10 +1,12 @@
 package com.github.houbb.iexcel.core.reader.impl;
 
 import com.github.houbb.iexcel.annotation.ExcelField;
+import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.util.ClassUtil;
+import com.github.houbb.iexcel.util.StrUtil;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -14,10 +16,15 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.*;
 
 /**
+ * excel reader 的基础实现
+ * 注意：这个类在阅读的量较大时会存在问题。
  * @author binbin.hou
  * @date 2018/11/15 20:00
  */
@@ -38,6 +45,10 @@ public class ExcelReader implements IExcelReader {
 
 
     //region 对象初始化
+    public ExcelReader(File excelFile) {
+        this(excelFile, null);
+    }
+
     public ExcelReader(File excelFile, int sheetIndex) {
         Workbook workbook = initWorkbook(excelFile);
         this.sheet = workbook.getSheetAt(sheetIndex);
@@ -45,6 +56,10 @@ public class ExcelReader implements IExcelReader {
 
     public ExcelReader(File excelFile, String sheetName) {
         Workbook workbook = initWorkbook(excelFile);
+        int sheetNum = workbook.getNumberOfSheets();
+        if(StrUtil.isBlank(sheetName)) {
+            sheetName = ExcelConst.DEFAULT_SHEET_NAME;
+        }
         this.sheet = workbook.getSheet(sheetName);
     }
 
@@ -92,7 +107,7 @@ public class ExcelReader implements IExcelReader {
                 //跳过成为表头处理的那一行
                 firstRowNum++;
             }
-            for(int index = firstRowNum; index < lastRowNum; index++) {
+            for(int index = firstRowNum; index <= lastRowNum; index++) {
                 Row row = sheet.getRow(index);
                 T instance = tClass.newInstance();
 
@@ -117,14 +132,19 @@ public class ExcelReader implements IExcelReader {
      * @return workbook
      */
     private Workbook initWorkbook(final File excelFile) {
-        final String fileName = excelFile.getName();
-        if(fileName.endsWith(ExcelTypeEnum.XLS.getValue())) {
-            return new HSSFWorkbook();
+        try {
+            final InputStream inputStream = new FileInputStream(excelFile);
+            final String fileName = excelFile.getName();
+            if(fileName.endsWith(ExcelTypeEnum.XLS.getValue())) {
+                return new HSSFWorkbook(inputStream);
+            }
+            if(fileName.endsWith(ExcelTypeEnum.XLSX.getValue())) {
+                return new XSSFWorkbook(inputStream);
+            }
+            throw new ExcelRuntimeException("不支持的 excel 文件类型!");
+        } catch (IOException e) {
+            throw new ExcelRuntimeException("Workbook 初始化异常");
         }
-        if(fileName.endsWith(ExcelTypeEnum.XLSX.getValue())) {
-            return new XSSFWorkbook();
-        }
-        throw new ExcelRuntimeException("不支持的 excel 文件类型!");
     }
 
     /**
@@ -206,8 +226,7 @@ public class ExcelReader implements IExcelReader {
                 ExcelField excelField = field.getAnnotation(ExcelField.class);
                 boolean readRequire = excelField.readRequire();
                 if(readRequire) {
-                    field.setAccessible(true);
-                    String headName = excelField.headName();
+                    final String headName = InnerExcelUtil.getFieldHeadName(excelField, field);
                     map.put(headName, field);
                 }
             }

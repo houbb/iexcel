@@ -1,15 +1,15 @@
 package com.github.houbb.iexcel.util.excel;
 
+import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.style.StyleSet;
 import com.github.houbb.iexcel.util.StrUtil;
 import org.apache.poi.ss.usermodel.*;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * 内部 EXCEL 工具类
@@ -18,6 +18,18 @@ import java.util.Optional;
  * @date 2018/11/14 20:06
  */
 public final class InnerExcelUtil {
+
+    /**
+     * 获取当前字段对应的 headName
+     * @param excelField excel 子弹信息
+     * @param field 字段
+     * @return 对应的 headName
+     */
+    public static String getFieldHeadName(final ExcelField excelField, final Field field) {
+        final String fieldName = field.getName();
+        String headName = excelField.headName();
+        return StrUtil.isNotBlank(headName) ? headName : fieldName;
+    }
 
     /**
      * 校验列的数量

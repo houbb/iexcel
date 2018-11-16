@@ -121,12 +121,12 @@ public abstract class BaseExcelWriter implements IExcelWriter {
         initHeaderAlias(firstLine);
         InnerExcelUtil.checkColumnNum(headerAliasMap.size());
         writeHeadRow(headerAliasMap.values());
+        writeRow(firstLine);
 
         // 处理后续行的信息
         while(iterator.hasNext()) {
             Object line = iterator.next();
-            Iterable<?> values = buildRowValues(line);
-            writeRow(values);
+            writeRow(line);
         }
 
         return this;
@@ -285,9 +285,10 @@ public abstract class BaseExcelWriter implements IExcelWriter {
      * 写出一行数据<br>
      * 本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
      *
-     * @param rowData 一行的数据
+     * @param object 一行的数据
      */
-    private void writeRow(final Iterable<?> rowData) {
+    private void writeRow(final Object object) {
+        Iterable<?> rowData = buildRowValues(object);
         InnerExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()),
                 rowData, this.styleSet,
                 false);
@@ -308,8 +309,7 @@ public abstract class BaseExcelWriter implements IExcelWriter {
             if (field.isAnnotationPresent(ExcelField.class)) {
                 ExcelField excel = field.getAnnotation(ExcelField.class);
                 final String fieldName = field.getName();
-                String headName = excel.headName();
-                headName = StrUtil.isNotBlank(headName) ? headName : fieldName;
+                final String headName = InnerExcelUtil.getFieldHeadName(excel, field);
                 if (excel.writeRequire()) {
                     headerAliasMap.put(fieldName, headName);
                 }

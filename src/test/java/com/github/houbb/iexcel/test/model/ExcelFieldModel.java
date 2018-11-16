@@ -18,7 +18,7 @@ public class ExcelFieldModel {
     @ExcelField(headName = "年龄")
     private String age;
 
-    @ExcelField(mapKey = "EMAIL", writeRequire = false)
+    @ExcelField(mapKey = "EMAIL", writeRequire = false, readRequire = false)
     private String email;
 
     @ExcelField(mapKey = "ADDRESS", headName = "地址", writeRequire = true)
@@ -54,5 +54,15 @@ public class ExcelFieldModel {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "ExcelFieldModel{" +
+                "name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }
