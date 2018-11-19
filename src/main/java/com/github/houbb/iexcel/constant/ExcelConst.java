@@ -4,7 +4,7 @@ package com.github.houbb.iexcel.constant;
  * EXCEL 相关常量
  *
  * @author binbin.hou
- * @date 2018/11/1 11:02
+ * date 2018/11/1 11:02
  */
 public interface ExcelConst {
 

@@ -8,7 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  * 2007 版本写法
  * @author binbin.hou
- * @date 2018/11/14 13:56
+ * date 2018/11/14 13:56
  */
 public class XSSFExcelWriter extends AbstractExcelWriter {
 

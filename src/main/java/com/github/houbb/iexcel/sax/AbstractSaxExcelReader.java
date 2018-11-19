@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * todo: 可以添加 null row 跳过属性。
  * @author binbin.hou
- * @date 2018/11/16 14:01
+ * date 2018/11/16 14:01
  */
 public abstract class AbstractSaxExcelReader<T> implements IExcelReader<T> {
 

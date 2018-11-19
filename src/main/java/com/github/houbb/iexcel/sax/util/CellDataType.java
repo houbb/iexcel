@@ -3,7 +3,7 @@ package com.github.houbb.iexcel.sax.util;
 /**
  * 列的字段类型
  * @author binbin.hou
- * @date 2018/11/19 16:14
+ * date 2018/11/19 16:14
  */
 public enum CellDataType {
 

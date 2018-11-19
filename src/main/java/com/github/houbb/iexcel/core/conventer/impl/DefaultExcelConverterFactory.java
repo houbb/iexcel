@@ -6,7 +6,7 @@ import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 
 /**
  * @author binbin.hou
- * @date 2018/11/15 9:14
+ * date 2018/11/15 9:14
  */
 public class DefaultExcelConverterFactory implements IExcelConverterFactory {
 

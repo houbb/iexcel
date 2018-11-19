@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 方法直接来自 hutool
  * @author binbin.hou
- * @date 2018/11/14 18:14
+ * date 2018/11/14 18:14
  */
 public class BeanUtil {
 

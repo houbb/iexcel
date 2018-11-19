@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 方法直接来自 hutool
  * @author binbin.hou
- * @date 2018/11/8 16:20
+ * date 2018/11/8 16:20
  */
 public class ClassUtil {
 

@@ -26,7 +26,7 @@ import java.util.*;
  * excel reader 的基础实现
  * 注意：这个类在阅读的量较大时会存在问题。
  * @author binbin.hou
- * @date 2018/11/15 20:00
+ * date 2018/11/15 20:00
  */
 public class ExcelReader<T> implements IExcelReader<T> {
 

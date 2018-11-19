@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 基础 excel writer 类
  * @author binbin.hou
- * @date 2018/11/14 13:56
+ * date 2018/11/14 13:56
  */
 public abstract class AbstractExcelWriter implements IExcelWriter {
 

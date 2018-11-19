@@ -4,7 +4,7 @@ import java.util.Collection;
 
 /**
  * @author binbin.hou
- * @date 2018/11/15 16:06
+ * date 2018/11/15 16:06
  */
 public class CollUtil {
 

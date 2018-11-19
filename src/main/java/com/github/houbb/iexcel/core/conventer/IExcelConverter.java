@@ -4,7 +4,7 @@ import java.util.Collection;
 
 /**
  * @author binbin.hou
- * @date 2018/11/14 21:56
+ * date 2018/11/14 21:56
  */
 public interface IExcelConverter<T> {
 

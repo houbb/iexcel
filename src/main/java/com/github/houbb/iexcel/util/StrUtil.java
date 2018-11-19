@@ -3,7 +3,7 @@ package com.github.houbb.iexcel.util;
 /**
  * 方法直接来自 hutool
  * @author binbin.hou
- * @date 2018/11/14 17:30
+ * date 2018/11/14 17:30
  */
 public class StrUtil {
 

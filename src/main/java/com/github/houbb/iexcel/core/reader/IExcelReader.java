@@ -6,7 +6,7 @@ import java.util.List;
  * 直接 poi 生成的 excel 使用 sax 模式是无法正常解析的，如果保存一下就可以。猜测代码生成的丢失了一些重要的信息。
  *
  * @author binbin.hou
- * @date 2018/11/15 19:57
+ * date 2018/11/15 19:57
  */
 public interface IExcelReader<T> {
 

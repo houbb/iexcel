@@ -7,7 +7,7 @@ import java.util.Collection;
 
 /**
  * @author binbin.hou
- * @date 2018/11/15 16:25
+ * date 2018/11/15 16:25
  */
 public class ExcelFieldConverter implements IExcelConverter<ExcelFieldModel> {
 
