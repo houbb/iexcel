@@ -12,9 +12,17 @@ import java.util.Collection;
 public class ExcelFieldConverter implements IExcelConverter<ExcelFieldModel> {
 
     @Override
-    public Collection<ExcelFieldModel> convert(Collection<ExcelFieldModel> originCollection) {
+    public Collection<ExcelFieldModel> write(Collection<ExcelFieldModel> originCollection) {
         for(ExcelFieldModel excelFieldMode : originCollection) {
-            excelFieldMode.setName(excelFieldMode.getName()+"转换之后的信息");
+            excelFieldMode.setName(excelFieldMode.getName()+"转换写入之后的信息");
+        }
+        return originCollection;
+    }
+
+    @Override
+    public Collection<ExcelFieldModel> read(Collection<ExcelFieldModel> originCollection) {
+        for(ExcelFieldModel excelFieldMode : originCollection) {
+            excelFieldMode.setName(excelFieldMode.getName()+"转换读取之后的信息");
         }
         return originCollection;
     }

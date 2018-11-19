@@ -2,6 +2,7 @@ package com.github.houbb.iexcel.test.core;
 
 import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
+import com.github.houbb.iexcel.core.writer.impl.SXSSFExcelWriter;
 import com.github.houbb.iexcel.test.model.ExcelFieldModel;
 import com.github.houbb.iexcel.util.excel.ExcelUtil;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ public class ExcelWriterTest {
 
     @Test
     public void listBeanTest() throws FileNotFoundException {
-        final String path = "1.xlsx";
+        final String path = "4.xlsx";
         List<ExcelFieldModel> modelList = new ArrayList();
         ExcelFieldModel indexModel = new ExcelFieldModel();
         indexModel.setName("你好");
@@ -58,7 +59,7 @@ public class ExcelWriterTest {
         modelList.add(indexModel);
 
         try(OutputStream outputStream = new FileOutputStream(path);
-            IExcelWriter writer = ExcelUtil.getExcelWriter(ExcelTypeEnum.XLSX);) {
+            IExcelWriter writer = new SXSSFExcelWriter();) {
             writer.write(modelList);
             writer.flush(outputStream);
         } catch (IOException e) {
@@ -80,7 +81,7 @@ public class ExcelWriterTest {
         }
 
         try(OutputStream outputStream = new FileOutputStream(path);
-            IExcelWriter writer = ExcelUtil.getExcelWriter(ExcelTypeEnum.XLSX);) {
+              IExcelWriter writer = ExcelUtil.getExcelWriter(ExcelTypeEnum.XLSX);) {
             writer.write(modelList);
             writer.flush(outputStream);
         } catch (IOException e) {

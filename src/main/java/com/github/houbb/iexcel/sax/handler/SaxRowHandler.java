@@ -1,7 +1,5 @@
 package com.github.houbb.iexcel.sax.handler;
 
-import java.util.List;
-
 /**
  * sax 单行信息处理接口
  * @author binbin.hou

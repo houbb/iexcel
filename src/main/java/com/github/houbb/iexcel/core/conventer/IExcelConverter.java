@@ -9,10 +9,17 @@ import java.util.Collection;
 public interface IExcelConverter<T> {
 
     /**
-     * 转换
+     * 写入时的转换
      * @param originCollection 原始的集合
      * @return 转换后的结果
      */
-    Collection<T> convert(final Collection<T> originCollection);
+    Collection<T> write(final Collection<T> originCollection);
+
+    /**
+     * 读取时的转换
+     * @param originCollection 原始的集合
+     * @return 转换后的结果
+     */
+    Collection<T> read(final Collection<T> originCollection);
 
 }

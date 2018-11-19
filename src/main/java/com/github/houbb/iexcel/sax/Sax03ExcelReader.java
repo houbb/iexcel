@@ -1,12 +1,10 @@
 package com.github.houbb.iexcel.sax;
 
-import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.core.reader.impl.AbstractExcelReader;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandlerContext;
 import com.github.houbb.iexcel.sax.handler.impl.DefaultSaxRowHandler;
-import com.github.houbb.iexcel.util.ClassUtil;
 import com.github.houbb.iexcel.util.StrUtil;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.poi.hssf.eventusermodel.*;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 参考资料：[POI Sax 事件驱动解析Excel2003文件](http://www.cnblogs.com/wshsdlau/p/5643862.html)
@@ -262,9 +259,12 @@ public class Sax03ExcelReader<T> extends AbstractExcelReader<T> implements HSSFL
         // 如果是表头，则不再参与 list 的构建
         if(this.startRowIndex == rowIndex
             && containsHead) {
-            initIndexFieldMap();
+            this.indexFieldMap = InnerExcelUtil.getReadIndexFieldMap(this.targetClass, this.rowCellList);
+            clear();
             return;
         }
+
+
 
         // 处理的范围判断
         if(startRowIndex <= rowIndex &&
@@ -279,46 +279,12 @@ public class Sax03ExcelReader<T> extends AbstractExcelReader<T> implements HSSFL
             this.rowResultList.add(row);
         }
 
+        clear();
+    }
+
+    private void clear() {
         // 清空行Cache
         this.rowCellList.clear();
-    }
-
-    /**
-     * 获取需要读取的字段 map
-     * @param tClass 当前类信息
-     * @return map
-     */
-    private Map<String, Field> readRequireFieldMap(final Class<?> tClass) {
-        Map<String, Field> map = new HashMap<>();
-        List<Field> fieldList = ClassUtil.getAllFieldList(tClass);
-        for(Field field : fieldList) {
-            if(field.isAnnotationPresent(ExcelField.class)) {
-                ExcelField excelField = field.getAnnotation(ExcelField.class);
-                boolean readRequire = excelField.readRequire();
-                if(readRequire) {
-                    final String headName = InnerExcelUtil.getFieldHeadName(excelField, field);
-                    map.put(headName, field);
-                }
-            }
-        }
-        return map;
-    }
-
-    /**
-     * 初始化 excel 下标和 class Field 之间的映射关系。
-     */
-    private void initIndexFieldMap() {
-        Map<String, Field> readRequireFieldMap = readRequireFieldMap(this.targetClass);
-
-        // 强制约定：如果 readRequire 则 excel 必须有与之对应的字段信息
-        for(String headName : readRequireFieldMap.keySet()) {
-            int index = this.rowCellList.indexOf(headName);
-            this.indexFieldMap.put(index, readRequireFieldMap.get(headName));
-        }
-
-        if(indexFieldMap.size() != readRequireFieldMap.size()) {
-            throw new ExcelRuntimeException("excel 的表头信息和 bean 指定的表头信息不一致");
-        }
     }
 
     /**

@@ -150,7 +150,7 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
         }
 
         IExcelConverter excelConverter = excelConverterOptional.get();
-        return excelConverter.convert(originalData);
+        return excelConverter.write(originalData);
     }
 
     /**

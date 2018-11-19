@@ -4,12 +4,12 @@ import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.style.StyleSet;
+import com.github.houbb.iexcel.util.ClassUtil;
 import com.github.houbb.iexcel.util.StrUtil;
 import org.apache.poi.ss.usermodel.*;
 
 import java.lang.reflect.Field;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * 内部 EXCEL 工具类
@@ -18,6 +18,52 @@ import java.util.Date;
  * @date 2018/11/14 20:06
  */
 public final class InnerExcelUtil {
+
+    /**
+     * 获取读取 cell 的下标和类字段的映射关系
+     * @param targetClass 目标类
+     * @param headNameList 表头列表
+     * @return 映射关系 map
+     */
+    public static Map<Integer, Field> getReadIndexFieldMap(final Class<?> targetClass,
+                                                          final List<Object> headNameList) {
+        Map<Integer, Field> readIndexFieldMap = new HashMap<>();
+        Map<String, Field> readRequireFieldMap = readRequireFieldMap(targetClass);
+
+        // 强制约定：如果 readRequire 则 excel 必须有与之对应的字段信息
+        for(String headName : readRequireFieldMap.keySet()) {
+            int index = headNameList.indexOf(headName);
+            readIndexFieldMap.put(index, readRequireFieldMap.get(headName));
+        }
+
+        if(readIndexFieldMap.size() != readRequireFieldMap.size()) {
+            throw new ExcelRuntimeException("excel 的表头信息和 bean 指定的表头信息不一致");
+        }
+
+        return readIndexFieldMap;
+    }
+
+    /**
+     * 获取需要读取的字段 map
+     * @param tClass 当前类信息
+     * @return map
+     */
+    private static Map<String, Field> readRequireFieldMap(final Class<?> tClass) {
+        Map<String, Field> map = new HashMap<>();
+        List<Field> fieldList = ClassUtil.getAllFieldList(tClass);
+        for(Field field : fieldList) {
+            if(field.isAnnotationPresent(ExcelField.class)) {
+                ExcelField excelField = field.getAnnotation(ExcelField.class);
+                boolean readRequire = excelField.readRequire();
+                if(readRequire) {
+                    final String headName = getFieldHeadName(excelField, field);
+                    map.put(headName, field);
+                }
+            }
+        }
+        return map;
+    }
+
 
     /**
      * 获取当前字段对应的 headName
