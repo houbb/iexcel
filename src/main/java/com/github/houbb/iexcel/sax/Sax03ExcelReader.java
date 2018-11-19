@@ -1,6 +1,5 @@
 package com.github.houbb.iexcel.sax;
 
-import com.github.houbb.iexcel.core.reader.impl.AbstractExcelReader;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandlerContext;
@@ -30,7 +29,7 @@ import java.util.Map;
  * @author binbin.hou
  * @date 2018/11/16 13:53
  */
-public class Sax03ExcelReader<T> extends AbstractExcelReader<T> implements HSSFListener {
+public class Sax03ExcelReader<T> extends AbstractSaxExcelReader<T> implements HSSFListener {
 
     //region 私有变量
     /**
@@ -264,8 +263,6 @@ public class Sax03ExcelReader<T> extends AbstractExcelReader<T> implements HSSFL
             return;
         }
 
-
-
         // 处理的范围判断
         if(startRowIndex <= rowIndex &&
             rowIndex <= endRowIndex) {
@@ -296,11 +293,6 @@ public class Sax03ExcelReader<T> extends AbstractExcelReader<T> implements HSSFL
         return this.sheetIndex < 0 || this.curSheetIndex == this.sheetIndex;
     }
     // ---------------------------------------------------------------------------------------------- Private method end
-
-    @Override
-    public List<T> readAll(Class<T> tClass) {
-        return read(tClass, 0, Integer.MAX_VALUE);
-    }
 
     @Override
     public List<T>  read(Class<T> tClass, int startIndex, int endIndex) {

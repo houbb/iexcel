@@ -19,12 +19,4 @@ public class ExcelFieldConverter implements IExcelConverter<ExcelFieldModel> {
         return originCollection;
     }
 
-    @Override
-    public Collection<ExcelFieldModel> read(Collection<ExcelFieldModel> originCollection) {
-        for(ExcelFieldModel excelFieldMode : originCollection) {
-            excelFieldMode.setName(excelFieldMode.getName()+"转换读取之后的信息");
-        }
-        return originCollection;
-    }
-
 }

@@ -1,6 +1,5 @@
 package com.github.houbb.iexcel.sax;
 
-import com.github.houbb.iexcel.core.reader.impl.AbstractExcelReader;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandlerContext;
@@ -40,13 +39,23 @@ import static com.github.houbb.iexcel.sax.constant.Sax07Constant.*;
  * @author binbin.hou
  * @date 2018/11/16 13:53
  */
-public class Sax07ExcelReader<T> extends AbstractExcelReader<T> implements ContentHandler {
+public class Sax07ExcelReader<T> extends AbstractSaxExcelReader<T> implements ContentHandler {
 
     //region 私有变量
     /**
-     * excel 2007 的共享字符串表,对应 sharedString.xml
+     * 存储每行的列元素
      */
-    private SharedStringsTable sharedStringsTable;
+    private List<Object> rowCellList = new ArrayList<>();
+
+    /**
+     * 行数据列表
+     */
+    private List<T> rowResultList = new ArrayList<>();
+
+    /**
+     * 行处理器
+     */
+    private SaxRowHandler rowHandler = new DefaultSaxRowHandler();
 
     /**
      * 目标类型
@@ -104,6 +113,11 @@ public class Sax07ExcelReader<T> extends AbstractExcelReader<T> implements Conte
     private String maxCellCoordinate;
 
     /**
+     * excel 2007 的共享字符串表,对应 sharedString.xml
+     */
+    private SharedStringsTable sharedStringsTable;
+
+    /**
      * 单元格的格式表，对应style.xml
      */
     private StylesTable stylesTable;
@@ -113,20 +127,7 @@ public class Sax07ExcelReader<T> extends AbstractExcelReader<T> implements Conte
      */
     private String numFormatString;
 
-    /**
-     * 存储每行的列元素
-     */
-    private List<Object> rowCellList = new ArrayList<>();
 
-    /**
-     * 行数据列表
-     */
-    private List<T> rowList = new ArrayList<>();
-
-    /**
-     * 行处理器
-     */
-    private SaxRowHandler rowHandler = new DefaultSaxRowHandler();
     //endregion
 
     //region 对象构建开始
@@ -139,10 +140,6 @@ public class Sax07ExcelReader<T> extends AbstractExcelReader<T> implements Conte
     }
     //endregion
 
-    @Override
-    public List<T> readAll(Class<T> tClass) {
-        return this.read(tClass, 0, Integer.MAX_VALUE);
-    }
 
     @Override
     public List<T> read(Class<T> tClass, int startIndex, int endIndex) {
@@ -160,7 +157,7 @@ public class Sax07ExcelReader<T> extends AbstractExcelReader<T> implements Conte
                 // 获取共享字符串表
                 this.sharedStringsTable = xssfReader.getSharedStringsTable();
                 parse(sheetInputStream);
-                return this.rowList;
+                return this.rowResultList;
             } catch (SAXException e) {
                 throw new ExcelRuntimeException(e);
             }
@@ -269,7 +266,7 @@ public class Sax07ExcelReader<T> extends AbstractExcelReader<T> implements Conte
                 context.setIndexFieldMap(this.indexFieldMap);
                 context.setTargetClass(this.targetClass);
                 T row = rowHandler.handle(context);
-                this.rowList.add(row);
+                this.rowResultList.add(row);
                 clear();
             }
         }

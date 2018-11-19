@@ -1,4 +1,4 @@
-package com.github.houbb.iexcel.core.reader.impl;
+package com.github.houbb.iexcel.sax;
 
 import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
@@ -6,12 +6,14 @@ import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.impl.DefaultSaxRowHandler;
 
 import java.io.File;
+import java.util.List;
 
-/**todo: 可以添加 null row 跳过属性。
+/**
+ * todo: 可以添加 null row 跳过属性。
  * @author binbin.hou
  * @date 2018/11/16 14:01
  */
-public abstract class AbstractExcelReader<T> implements IExcelReader<T> {
+public abstract class AbstractSaxExcelReader<T> implements IExcelReader<T> {
 
     //region 私有变量
     /**
@@ -38,11 +40,11 @@ public abstract class AbstractExcelReader<T> implements IExcelReader<T> {
     //endregion
 
     //region 对象初始化
-    public AbstractExcelReader(File excelFile) {
+    public AbstractSaxExcelReader(File excelFile) {
         this(excelFile, ExcelConst.DEFAULT_SHEET_INDEX);
     }
 
-    public AbstractExcelReader(File excelFile, int sheetIndex) {
+    public AbstractSaxExcelReader(File excelFile, int sheetIndex) {
         this.sheetIndex = sheetIndex;
         this.excelFile = excelFile;
         saxRowHandler = new DefaultSaxRowHandler();
@@ -53,7 +55,7 @@ public abstract class AbstractExcelReader<T> implements IExcelReader<T> {
      * @param containsHead  是否包含表头
      * @return this
      */
-    public AbstractExcelReader containsHead(final boolean containsHead) {
+    public AbstractSaxExcelReader containsHead(final boolean containsHead) {
         this.containsHead = containsHead;
         return this;
     }
@@ -63,10 +65,15 @@ public abstract class AbstractExcelReader<T> implements IExcelReader<T> {
      * @param saxRowHandler 每一行的处理
      * @return this
      */
-    public AbstractExcelReader saxRowHandler(final SaxRowHandler saxRowHandler) {
+    public AbstractSaxExcelReader saxRowHandler(final SaxRowHandler saxRowHandler) {
         this.saxRowHandler = saxRowHandler;
         return this;
     }
     //endregion 对象初始化
+
+    @Override
+    public List<T> readAll(Class<T> tClass) {
+        return this.read(tClass, 0, Integer.MAX_VALUE);
+    }
 
 }

@@ -15,11 +15,4 @@ public interface IExcelConverter<T> {
      */
     Collection<T> write(final Collection<T> originCollection);
 
-    /**
-     * 读取时的转换
-     * @param originCollection 原始的集合
-     * @return 转换后的结果
-     */
-    Collection<T> read(final Collection<T> originCollection);
-
 }
