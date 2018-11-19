@@ -21,7 +21,6 @@ public interface IExcelReader<T> {
      * @param tClass 泛型
      * @param startIndex 开始的行信息
      * @param endIndex 结束的行信息
-     * @param <T> 泛型
      * @return 读取的对象列表
      */
     List<T> read(Class<T> tClass, final int startIndex, final int endIndex);

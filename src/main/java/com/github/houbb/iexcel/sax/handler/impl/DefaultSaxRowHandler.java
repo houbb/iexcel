@@ -37,12 +37,4 @@ public class DefaultSaxRowHandler implements SaxRowHandler {
         }
     }
 
-    // 包含表头
-    private Map<Integer, Field> getCellIndexFieldMap() {
-        Map<Integer, Field> cellFieldMap = new LinkedHashMap<>();
-
-        return cellFieldMap;
-    }
-    //
-
 }

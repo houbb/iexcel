@@ -7,7 +7,7 @@ import com.github.houbb.iexcel.sax.handler.impl.DefaultSaxRowHandler;
 
 import java.io.File;
 
-/**
+/**todo: 可以添加 null row 跳过属性。
  * @author binbin.hou
  * @date 2018/11/16 14:01
  */
