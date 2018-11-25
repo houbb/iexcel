@@ -6,6 +6,24 @@
 [![Build Status](https://www.travis-ci.org/houbb/iexcel.svg?branch=master)](https://www.travis-ci.org/houbb/iexcel?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/houbb/iexcel/badge.svg?branch=master)](https://coveralls.io/github/houbb/iexcel?branch=master)
 
+## 特性
+
+- OO 的方式操作 excel，编程更加方便优雅。
+
+- sax 模式读取，SXSS 模式写入。避免 excel 大文件 OOM。
+
+- 基于注解，编程更加灵活。
+
+- 写入可以基于对象列表，也可以基于 Map，实际使用更加方便。
+
+- 设计简单，注释完整。方便大家学习改造。
+
+## 后期特性
+
+- 读取跳过空白行
+
+- excel 样式相关的注解开发
+
 # 创作缘由
 
 实际工作和学习中，apache poi 操作 excel 过于复杂。
@@ -18,9 +36,7 @@
 
 - hutool-poi
 
-都或多或少难以满足自己的实际需要。
-
-于是就自己写了一个操作 excel 导出的工具。
+都或多或少难以满足自己的实际需要，于是就自己写了一个操作 excel 导出的工具。
 
 # 快速开始
 
