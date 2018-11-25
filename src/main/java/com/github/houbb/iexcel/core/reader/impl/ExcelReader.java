@@ -49,6 +49,11 @@ public class ExcelReader<T> implements IExcelReader<T> {
         this(excelFile, null);
     }
 
+    /**
+     * 获取 excel 读取实现
+     * @param excelFile excel 文件信息
+     * @param sheetIndex 从0开始
+     */
     public ExcelReader(File excelFile, int sheetIndex) {
         Workbook workbook = initWorkbook(excelFile);
         this.sheet = workbook.getSheetAt(sheetIndex);
@@ -168,7 +173,7 @@ public class ExcelReader<T> implements IExcelReader<T> {
             for(String headName : readRequireFieldMap.keySet()) {
                 Field field = readRequireFieldMap.get(headName);
                 Integer index = cellHeadNameIndexMap.get(headName);
-                if(!Objects.isNull(index)) {
+                if(index != null) {
                     cellFieldMap.put(index, field);
                 }
             }

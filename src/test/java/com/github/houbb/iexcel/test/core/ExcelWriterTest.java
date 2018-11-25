@@ -1,6 +1,5 @@
 package com.github.houbb.iexcel.test.core;
 
-import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.core.writer.impl.SXSSFExcelWriter;
 import com.github.houbb.iexcel.test.model.ExcelFieldModel;
@@ -30,7 +29,7 @@ public class ExcelWriterTest {
         indexModel.setEmail("1@qq.com");
         modelList.add(indexModel);
 
-        ExcelUtil.onceWriteAndFlush(ExcelTypeEnum.XLS, null, modelList, path);
+//        ExcelUtil.onceWriteAndFlush(ExcelTypeEnum.XLS, null, modelList, path);
     }
 
     @Test
@@ -44,7 +43,7 @@ public class ExcelWriterTest {
         indexModel.setEmail("1@qq.com");
         modelList.add(indexModel);
 
-        ExcelUtil.onceWriteAndFlush(modelList, path);
+//        ExcelUtil.onceWriteAndFlush(modelList, path);
     }
 
     @Test
@@ -81,7 +80,7 @@ public class ExcelWriterTest {
         }
 
         try(OutputStream outputStream = new FileOutputStream(path);
-              IExcelWriter writer = ExcelUtil.getExcelWriter(ExcelTypeEnum.XLSX);) {
+              IExcelWriter writer = ExcelUtil.get07ExcelWriter();) {
             writer.write(modelList);
             writer.flush(outputStream);
         } catch (IOException e) {
@@ -98,7 +97,7 @@ public class ExcelWriterTest {
         map.put("ADDRESS", "外滩38号");
 
         try(OutputStream outputStream = new FileOutputStream(path);
-            IExcelWriter writer = ExcelUtil.getExcelWriter(ExcelTypeEnum.XLS);) {
+            IExcelWriter writer = ExcelUtil.get03ExcelWriter();) {
             writer.write(Arrays.asList(map), ExcelFieldModel.class);
             writer.flush(outputStream);
         } catch (IOException e) {
