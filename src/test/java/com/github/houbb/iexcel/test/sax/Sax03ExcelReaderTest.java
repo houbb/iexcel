@@ -16,7 +16,7 @@ public class Sax03ExcelReaderTest {
 
     @Test
     public void readAllTest() {
-        final String path = "D:\\github\\iexcel\\5.xls";
+        final String path = "5.xls";
         IExcelReader<ExcelFieldModel> excelReader = new Sax03ExcelReader<>(new File(path));
         List<ExcelFieldModel> excelFieldModelList = excelReader.readAll(ExcelFieldModel.class);
         System.out.println(excelFieldModelList);
