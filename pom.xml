@@ -4,11 +4,7 @@
 
     <groupId>com.github.houbb</groupId>
     <artifactId>iexcel</artifactId>
-<<<<<<< de68a14ec4f7a84a9c8865f16d4e992ae89033ee
-    <version>0.0.1</version>
-=======
     <version>0.0.2</version>
->>>>>>> release branch 0.0.2
 
     <properties>
         <!--============================== All Plugins START ==============================-->
