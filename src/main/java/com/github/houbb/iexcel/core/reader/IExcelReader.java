@@ -20,7 +20,7 @@ public interface IExcelReader<T> {
     /**
      * 读取指定范围内的
      * @param tClass 泛型
-     * @param startIndex 开始的行信息
+     * @param startIndex 开始的行信息(从0开始)
      * @param endIndex 结束的行信息
      * @return 读取的对象列表
      */
