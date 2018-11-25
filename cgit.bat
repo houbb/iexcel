@@ -1,7 +1,7 @@
 :: 用于提交当前变更(windows)
 :: author: houbb
 :: LastUpdateTime:  2018-11-22 09:08:52
-:: 用法：双击运行，或者当前路径 cmd 直接输入 ./cgit.bat
+:: 用法：双击运行，或者当前路径 cmd 直接输入 .\cgit.bat
 
 git add .
 git commit -m "[Feature] add for new"
