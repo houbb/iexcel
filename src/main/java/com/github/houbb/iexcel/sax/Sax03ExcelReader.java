@@ -1,10 +1,11 @@
 package com.github.houbb.iexcel.sax;
 
+import com.github.houbb.heaven.constant.PunctuationConst;
+import com.github.houbb.heaven.util.lang.StringUtil;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandlerContext;
 import com.github.houbb.iexcel.sax.handler.impl.DefaultSaxRowHandler;
-import com.github.houbb.iexcel.util.StrUtil;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.poi.hssf.eventusermodel.*;
 import org.apache.poi.hssf.eventusermodel.dummyrecord.LastCellOfRowDummyRecord;
@@ -147,7 +148,7 @@ public class Sax03ExcelReader<T> extends AbstractSaxExcelReader<T> implements HS
             if (record instanceof MissingCellDummyRecord) {
                 // 空值的操作
                 MissingCellDummyRecord mc = (MissingCellDummyRecord) record;
-                rowCellList.add(mc.getColumn(), StrUtil.EMPTY);
+                rowCellList.add(mc.getColumn(), StringUtil.EMPTY);
             } else if (record instanceof LastCellOfRowDummyRecord) {
                 // 行结束
                 processLastCell((LastCellOfRowDummyRecord) record);
@@ -171,7 +172,7 @@ public class Sax03ExcelReader<T> extends AbstractSaxExcelReader<T> implements HS
             case BlankRecord.sid:
                 // 空白记录
                 BlankRecord brec = (BlankRecord) record;
-                rowCellList.add(brec.getColumn(), StrUtil.EMPTY);
+                rowCellList.add(brec.getColumn(), StringUtil.EMPTY);
                 break;
             // 布尔类型
             case BoolErrRecord.sid:
@@ -190,9 +191,9 @@ public class Sax03ExcelReader<T> extends AbstractSaxExcelReader<T> implements HS
                         value = formatListener.formatNumberDateCell(frec);
                     }
                 } else {
-                    value = StrUtil.DOUBLE_QUOTE +
+                    value = PunctuationConst.DOUBLE_QUOTES +
                             HSSFFormulaParser.toFormulaString(stubWorkbook, frec.getParsedExpression())
-                            + StrUtil.DOUBLE_QUOTE;
+                            + PunctuationConst.DOUBLE_QUOTES;
                 }
                 rowCellList.add(frec.getColumn(), value);
                 break;
@@ -213,7 +214,7 @@ public class Sax03ExcelReader<T> extends AbstractSaxExcelReader<T> implements HS
             case LabelSSTRecord.sid:
                 LabelSSTRecord lsrec = (LabelSSTRecord) record;
                 if (sstRecord == null) {
-                    rowCellList.add(lsrec.getColumn(), StrUtil.EMPTY);
+                    rowCellList.add(lsrec.getColumn(), StringUtil.EMPTY);
                 } else {
                     value = sstRecord.getString(lsrec.getSSTIndex()).toString();
                     rowCellList.add(lsrec.getColumn(), value);
@@ -224,10 +225,10 @@ public class Sax03ExcelReader<T> extends AbstractSaxExcelReader<T> implements HS
                 NumberRecord numrec = (NumberRecord) record;
 
                 final String formatString = formatListener.getFormatString(numrec);
-                if (formatString.contains(StrUtil.DOT)) {
+                if (formatString.contains(PunctuationConst.DOT)) {
                     //浮点数
                     value = numrec.getValue();
-                } else if (formatString.contains(StrUtil.SLASH) || formatString.contains(StrUtil.COLON)) {
+                } else if (formatString.contains(PunctuationConst.SLASH) || formatString.contains(PunctuationConst.COLON)) {
                     //日期
                     value = formatListener.formatNumberDateCell(numrec);
                 } else {

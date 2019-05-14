@@ -1,7 +1,7 @@
 package com.github.houbb.iexcel.sax.util;
 
-import com.github.houbb.iexcel.util.StrUtil;
-import org.apache.poi.ss.usermodel.DataFormatter;
+import com.github.houbb.heaven.constant.PunctuationConst;
+import com.github.houbb.heaven.util.lang.StringUtil;
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 
@@ -11,8 +11,15 @@ import java.util.Date;
  * EXCEL SAX 工具类
  * @author binbin.hou
  * date 2018/11/19 16:13
+ * @since 0.0.1
  */
-public class ExcelSaxUtil {
+public final class ExcelSaxUtil {
+
+    /**
+     * 私有化构造器
+     * @since 0.0.3
+     */
+    private ExcelSaxUtil(){}
 
     // 填充字符串
     public static final char CELL_FILL_CHAR = '@';
@@ -45,7 +52,7 @@ public class ExcelSaxUtil {
                 result = String.format("\"%s\"", value);
                 break;
             case INLINESTR:
-                result = new XSSFRichTextString(value.toString()).toString();
+                result = new XSSFRichTextString(value).toString();
                 break;
             case SSTINDEX:
                 try {
@@ -82,15 +89,15 @@ public class ExcelSaxUtil {
     public static int countNullCell(String preRef, String ref) {
         // excel2007最大行数是1048576，最大列数是16384，最后一列列名是XFD
         // 数字代表列，去掉列信息
-        String preXfd = StrUtil.nullToDefault(preRef, StrUtil.AT)
-                .replaceAll("\\d+", StrUtil.EMPTY);
-        String xfd = StrUtil.nullToDefault(ref, StrUtil.AT)
-                .replaceAll("\\d+", StrUtil.EMPTY);
+        String preXfd = StringUtil.nullToDefault(preRef, PunctuationConst.AT)
+                .replaceAll("\\d+", PunctuationConst.EMPTY);
+        String xfd = StringUtil.nullToDefault(ref, PunctuationConst.AT)
+                .replaceAll("\\d+", PunctuationConst.EMPTY);
 
         // A表示65，@表示64，如果A算作1，那@代表0
         // 填充最大位数3
-        preXfd = StrUtil.fill(preXfd, CELL_FILL_CHAR, MAX_CELL_BIT, true);
-        xfd = StrUtil.fill(xfd, CELL_FILL_CHAR, MAX_CELL_BIT, true);
+        preXfd = StringUtil.fill(preXfd, CELL_FILL_CHAR, MAX_CELL_BIT, true);
+        xfd = StringUtil.fill(xfd, CELL_FILL_CHAR, MAX_CELL_BIT, true);
 
         char[] preLetter = preXfd.toCharArray();
         char[] letter = xfd.toCharArray();
@@ -119,12 +126,12 @@ public class ExcelSaxUtil {
      * @since 4.1.0
      */
     private static Number getNumberValue(String value, String numFmtString) {
-        if(StrUtil.isBlank(value)) {
+        if(StringUtil.isBlank(value)) {
             return null;
         }
         double numValue = Double.parseDouble(value);
         // 普通数字
-        if (null != numFmtString && numFmtString.indexOf(StrUtil.C_DOT) < 0) {
+        if (null != numFmtString && numFmtString.indexOf(PunctuationConst.C_DOT) < 0) {
             final long longPart = (long) numValue;
             if (longPart == numValue) {
                 // 对于无小数部分的数字类型，转为Long

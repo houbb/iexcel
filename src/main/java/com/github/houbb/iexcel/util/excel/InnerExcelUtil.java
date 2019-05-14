@@ -1,11 +1,12 @@
 package com.github.houbb.iexcel.util.excel;
 
+import com.github.houbb.heaven.constant.PunctuationConst;
+import com.github.houbb.heaven.util.lang.StringUtil;
+import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
 import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.style.StyleSet;
-import com.github.houbb.iexcel.util.ClassUtil;
-import com.github.houbb.iexcel.util.StrUtil;
 import org.apache.poi.ss.usermodel.*;
 
 import java.lang.reflect.Field;
@@ -16,8 +17,15 @@ import java.util.*;
  *
  * @author binbin.hou
  * date 2018/11/14 20:06
+ * @since 0.0.1
  */
 public final class InnerExcelUtil {
+
+    /**
+     * 私有化构造器
+     * @since 0.0.3
+     */
+    private InnerExcelUtil(){}
 
     /**
      * 获取读取 cell 的下标和类字段的映射关系
@@ -74,7 +82,7 @@ public final class InnerExcelUtil {
     public static String getFieldHeadName(final ExcelField excelField, final Field field) {
         final String fieldName = field.getName();
         String headName = excelField.headName();
-        return StrUtil.isNotBlank(headName) ? headName : fieldName;
+        return StringUtil.isNotBlank(headName) ? headName : fieldName;
     }
 
     /**
@@ -127,7 +135,7 @@ public final class InnerExcelUtil {
         }
 
         if (null == value) {
-            cell.setCellValue(StrUtil.EMPTY);
+            cell.setCellValue(StringUtil.EMPTY);
         } else if (value instanceof Date) {
             if (null != styleSet.getCellStyleForDate()) {
                 cell.setCellStyle(styleSet.getCellStyleForDate());
@@ -178,11 +186,11 @@ public final class InnerExcelUtil {
                 value = getCellValue(cell, cell.getCachedFormulaResultTypeEnum());
                 break;
             case BLANK:
-                value = StrUtil.EMPTY;
+                value = StringUtil.EMPTY;
                 break;
             case ERROR:
                 final FormulaError error = FormulaError.forInt(cell.getErrorCellValue());
-                value = (null == error) ? StrUtil.EMPTY : error.getString();
+                value = (null == error) ? StringUtil.EMPTY : error.getString();
                 break;
             default:
                 value = cell.getStringCellValue();
@@ -213,7 +221,7 @@ public final class InnerExcelUtil {
 
         final String format = style.getDataFormatString();
         // 普通数字
-        if (null != format && format.indexOf(StrUtil.C_DOT) < 0) {
+        if (null != format && format.indexOf(PunctuationConst.C_DOT) < 0) {
             final long longPart = (long) value;
             if (longPart == value) {
                 // 对于无小数部分的数字类型，转为Long

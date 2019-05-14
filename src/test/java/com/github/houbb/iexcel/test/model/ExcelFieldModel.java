@@ -1,15 +1,13 @@
 package com.github.houbb.iexcel.test.model;
 
 
-import com.github.houbb.iexcel.annotation.ExcelConverter;
 import com.github.houbb.iexcel.annotation.ExcelField;
-import com.github.houbb.iexcel.test.converter.ExcelFieldConverter;
 
 /**
  * excel field model 测试 bean
  * @author houbinbin
+ * @since 0.0.1
  */
-@ExcelConverter(ExcelFieldConverter.class)
 public class ExcelFieldModel {
 
     @ExcelField

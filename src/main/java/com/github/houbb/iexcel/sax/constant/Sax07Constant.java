@@ -7,6 +7,11 @@ package com.github.houbb.iexcel.sax.constant;
  */
 public final class Sax07Constant {
 
+    /**
+     * @since 0.0.3
+     */
+    private Sax07Constant(){}
+
     //列元素
     public static final String C_ELEMENT = "c";
     //列中的v元素

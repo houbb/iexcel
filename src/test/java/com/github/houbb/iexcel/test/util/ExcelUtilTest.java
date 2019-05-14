@@ -1,11 +1,12 @@
 package com.github.houbb.iexcel.test.util;
 
+import com.github.houbb.heaven.util.nio.PathUtil;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.test.model.ExcelFieldModel;
 import com.github.houbb.iexcel.util.excel.ExcelUtil;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,7 +28,7 @@ public class ExcelUtilTest {
     @Test
     public void excelWriter03Test() {
         // 待生成的 excel 文件路径
-        final String filePath = "excelWriter03.xls";
+        final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
 
         // 对象列表
         List<ExcelFieldModel> models = buildModelList();
@@ -35,6 +36,7 @@ public class ExcelUtilTest {
         try(IExcelWriter excelWriter = ExcelUtil.get03ExcelWriter();
             OutputStream outputStream = new FileOutputStream(filePath)) {
             // 可根据实际需要，多次写入列表
+            excelWriter.write(models);
             excelWriter.write(models);
 
             // 将列表内容真正的输出到 excel 文件
@@ -51,8 +53,7 @@ public class ExcelUtilTest {
     @Test
     public void onceWriterAndFlush07Test() {
         // 待生成的 excel 文件路径
-        final String filePath = "onceWriterAndFlush07.xlsx";
-
+        final String filePath = PathUtil.getAppTestResourcesPath()+"/onceWriterAndFlush07.xlsx";
         // 对象列表
         List<ExcelFieldModel> models = buildModelList();
 
@@ -68,7 +69,9 @@ public class ExcelUtilTest {
      */
     @Test
     public void readWriterTest() {
-        File file = new File("excelWriter03.xls");
+        final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
+
+        File file = new File(filePath);
         IExcelReader<ExcelFieldModel> excelReader = ExcelUtil.getExcelReader(file);
         List<ExcelFieldModel> models = excelReader.readAll(ExcelFieldModel.class);
         System.out.println(models);

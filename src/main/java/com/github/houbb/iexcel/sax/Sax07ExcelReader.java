@@ -1,12 +1,13 @@
 package com.github.houbb.iexcel.sax;
 
+import com.github.houbb.heaven.constant.PunctuationConst;
+import com.github.houbb.heaven.util.lang.StringUtil;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandlerContext;
 import com.github.houbb.iexcel.sax.handler.impl.DefaultSaxRowHandler;
 import com.github.houbb.iexcel.sax.util.CellDataType;
 import com.github.houbb.iexcel.sax.util.ExcelSaxUtil;
-import com.github.houbb.iexcel.util.StrUtil;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -177,7 +178,7 @@ public class Sax07ExcelReader<T> extends AbstractSaxExcelReader<T> implements Co
             String tempCurCoordinate = attributes.getValue(R_ATTR);
             // 前一列为null，则将其设置为"@",A为第一列，ascii码为65，前一列即为@，ascii码64
             if (preCoordinate == null) {
-                preCoordinate = StrUtil.AT;
+                preCoordinate = PunctuationConst.AT;
             } else {
                 // 存在，则前一列要设置为上一列的坐标
                 preCoordinate = curCoordinate;
@@ -188,7 +189,7 @@ public class Sax07ExcelReader<T> extends AbstractSaxExcelReader<T> implements Co
             setCellType(attributes);
         }
 
-        lastContent = StrUtil.EMPTY;
+        lastContent = PunctuationConst.EMPTY;
     }
 
     /**
@@ -200,7 +201,7 @@ public class Sax07ExcelReader<T> extends AbstractSaxExcelReader<T> implements Co
         // 重置numFmtIndex,numFmtString的值
         // 单元格存储格式的索引，对应style.xml中的numFmts元素的子元素索引
         int numFmtIndex = 0;
-        numFormatString = StrUtil.EMPTY;
+        numFormatString = PunctuationConst.EMPTY;
         this.cellDataType = CellDataType.of(attribute.getValue(T_ATTR_VALUE));
 
         // 获取单元格的xf索引，对应style.xml中cellXfs的子元素xf
@@ -225,7 +226,7 @@ public class Sax07ExcelReader<T> extends AbstractSaxExcelReader<T> implements Co
      */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        final String contentStr = StrUtil.trim(lastContent);
+        final String contentStr = StringUtil.trim(lastContent);
 
         if (T_ELEMENT.equals(qName)) {
             // type标签

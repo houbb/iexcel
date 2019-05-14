@@ -4,6 +4,7 @@ package com.github.houbb.iexcel.exception;
  * EXCEL 运行时异常
  * @author binbin.hou
  * date 2018/11/1 10:57
+ * @since 0.0.1
  */
 public class ExcelRuntimeException extends RuntimeException {
 

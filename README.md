@@ -6,7 +6,7 @@
 [![Build Status](https://www.travis-ci.org/houbb/iexcel.svg?branch=master)](https://www.travis-ci.org/houbb/iexcel?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/houbb/iexcel/badge.svg?branch=master)](https://coveralls.io/github/houbb/iexcel?branch=master)
 
-## 特性
+# 特性
 
 - OO 的方式操作 excel，编程更加方便优雅。
 
@@ -18,11 +18,13 @@
 
 - 设计简单，注释完整。方便大家学习改造。
 
-## 后期特性
+## v0.0.3 主要变化
 
-- 读取跳过空白行
+- 使用 jdk7 重新编译发布，使用范围更广泛。
 
-- excel 样式相关的注解开发
+- 修复列表多次插入，表头重复生成的 BUG
+
+> [变更日志](doc/CHANGELOG.md)
 
 # 创作缘由
 
@@ -48,7 +50,7 @@
 <dependency>
      <groupId>com.github.houbb</groupId>
      <artifactId>iexcel</artifactId>
-     <version>0.0.2</version>
+     <version>0.0.3</version>
 </dependency>
 ```
 

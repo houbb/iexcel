@@ -1,19 +1,15 @@
 package com.github.houbb.iexcel.core.writer.impl;
 
 
-import com.github.houbb.iexcel.annotation.ExcelConverter;
+import com.github.houbb.heaven.util.lang.StringUtil;
+import com.github.houbb.heaven.util.lang.reflect.ClassTypeUtil;
+import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
+import com.github.houbb.heaven.util.util.CollectionUtil;
 import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.constant.ExcelConst;
-import com.github.houbb.iexcel.core.conventer.IExcelConverter;
-import com.github.houbb.iexcel.core.conventer.IExcelConverterFactory;
-import com.github.houbb.iexcel.core.conventer.impl.DefaultExcelConverterFactory;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.style.StyleSet;
-import com.github.houbb.iexcel.util.BeanUtil;
-import com.github.houbb.iexcel.util.ClassUtil;
-import com.github.houbb.iexcel.util.CollUtil;
-import com.github.houbb.iexcel.util.StrUtil;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -43,6 +39,13 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
     private volatile boolean isClosed;
 
     /**
+     * 是否已经包含表头
+     * 1. 避免多次写入，表头也被写入多次的问题
+     * @since 0.0.3
+     */
+    private volatile boolean containsHeadRow;
+
+    /**
      * 表头别名信息 map
      */
     private Map<String, String> headerAliasMap;
@@ -62,27 +65,13 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
      */
     private Sheet sheet;
 
-    /**
-     * 类型转换器工厂
-     */
-    private IExcelConverterFactory converterFactory;
-
-    public AbstractExcelWriter() {
-        this(null, null);
+    protected AbstractExcelWriter() {
+        this(null);
     }
 
-    public AbstractExcelWriter(final String sheetName) {
-        this(sheetName, null);
-    }
-
-    public AbstractExcelWriter(final String sheetName,
-                               final IExcelConverterFactory converterFactory) {
+    protected AbstractExcelWriter(final String sheetName) {
         this.workbook = getWorkbook();
-        // 使用默认的 excel 转换工厂
-        if(converterFactory == null) {
-            this.converterFactory = new DefaultExcelConverterFactory();
-        }
-        final String realSheetName = StrUtil.isBlank(sheetName)
+        final String realSheetName = StringUtil.isBlank(sheetName)
                 ? ExcelConst.DEFAULT_SHEET_NAME : sheetName;
         this.sheet = workbook.createSheet(realSheetName);
         this.styleSet = new StyleSet(workbook);
@@ -103,7 +92,7 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
     @Override
     public IExcelWriter write(Collection<?> data) {
         // 快速返回
-        if(CollUtil.isEmpty(data)) {
+        if(CollectionUtil.isEmpty(data)) {
             return this;
         }
 
@@ -111,12 +100,9 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
         checkClosedStatus();
         checkRowNum(data.size());
 
-        // 结果转换
-        Collection<?> convertData = convertCollectionData(data);
-
         // 生成 excel 文件
         // 处理第一条数据信息
-        Iterator iterator = convertData.iterator();
+        Iterator iterator = data.iterator();
         Object firstLine = iterator.next();
         initHeaderAlias(firstLine);
         InnerExcelUtil.checkColumnNum(headerAliasMap.size());
@@ -130,50 +116,6 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
         }
 
         return this;
-    }
-
-    /**
-     * 转换器转换数据
-     * 如果列表为空或者转换器不存在，则不进行转换。
-     * @param originalData 原始数据列表
-     * @return 转换后的结果
-     */
-    private Collection<?> convertCollectionData(Collection<?> originalData) {
-        if(CollUtil.isEmpty(originalData)) {
-            return originalData;
-        }
-
-        final Object firstElem = originalData.iterator().next();
-        Optional<IExcelConverter> excelConverterOptional = getExcelConverter(firstElem);
-        if(!excelConverterOptional.isPresent()) {
-            return originalData;
-        }
-
-        IExcelConverter excelConverter = excelConverterOptional.get();
-        return excelConverter.write(originalData);
-    }
-
-    /**
-     * 获取对应的 excel 转换器
-     * @param object 对象
-     * @return excel 转换器
-     */
-    private Optional<IExcelConverter> getExcelConverter(Object object) {
-        if(null == object) {
-            return Optional.empty();
-        }
-
-        Class clazz = object.getClass();
-        if (clazz.isAnnotationPresent(ExcelConverter.class)) {
-            ExcelConverter excelConverter = (ExcelConverter) clazz.getAnnotation(ExcelConverter.class);
-            Class<? extends IExcelConverter> excelConverterClass = excelConverter.value();
-            IExcelConverter iExcelConverter = converterFactory.getConverter(excelConverterClass);
-            if(iExcelConverter == null) {
-                throw new ExcelRuntimeException("无法找到对应的转换器");
-            }
-            return Optional.of(iExcelConverter);
-        }
-        return Optional.empty();
     }
 
     @Override
@@ -224,7 +166,7 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
         if (field.isAnnotationPresent(ExcelField.class)) {
             ExcelField column = field.getAnnotation(ExcelField.class);
             final String mapKey = column.mapKey();
-            if (StrUtil.isNotBlank(mapKey)) {
+            if (StringUtil.isNotBlank(mapKey)) {
                 return mapKey;
             }
             return fieldName;
@@ -238,7 +180,7 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
      * @return 构建后的列表信息
      */
     private Iterable<?> buildRowValues(final Object object) {
-        Map beanMap = BeanUtil.beanToMap(object);
+        Map beanMap = ClassUtil.beanToMap(object);
         List<Object> valueList = new ArrayList<>();
         for(String fieldName : headerAliasMap.keySet()) {
             Object value = beanMap.get(fieldName);
@@ -264,7 +206,6 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
         this.currentRow = null;
         this.isClosed = true;
 
-        this.converterFactory = null;
         this.styleSet = null;
         this.workbook = null;
         this.sheet = null;
@@ -276,9 +217,12 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
      * 如果没有，则视为没有字段需要写入。
      */
     private void writeHeadRow(final Iterable<?> headRowData) {
-        InnerExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()),
-                headRowData, this.styleSet,
-                true);
+        if(!containsHeadRow) {
+            InnerExcelUtil.writeRow(this.sheet.createRow(this.currentRow.getAndIncrement()),
+                    headRowData, this.styleSet,
+                    true);
+            containsHeadRow = true;
+        }
     }
 
     /**
@@ -298,7 +242,7 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
      * 初始化标题别名
      */
     private void initHeaderAlias(final Object object) {
-        if(!BeanUtil.isBean(object.getClass())) {
+        if(!ClassTypeUtil.isBean(object.getClass())) {
             throw new ExcelRuntimeException("列表必须为 java Bean 对象列表");
         }
 

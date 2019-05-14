@@ -4,6 +4,7 @@ package com.github.houbb.iexcel.constant.enums;
  * excel 类型常量
  *
  * @author houbinbin
+ * @since 0.0.1
  */
 public enum ExcelTypeEnum {
     /**
