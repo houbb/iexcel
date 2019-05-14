@@ -6,8 +6,11 @@ import org.apache.poi.ss.usermodel.*;
  * 方法直接来自 hutool
  * @author binbin.hou
  * date 2018/11/14 17:30
+ * @since 0.0.1
  */
-public class StyleUtil {
+public final class StyleUtil {
+
+    private StyleUtil(){}
 
     /**
      * 克隆新的{@link CellStyle}

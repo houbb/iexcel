@@ -4,7 +4,6 @@ package com.github.houbb.iexcel.core.writer.impl;
 import com.github.houbb.iexcel.constant.ExcelConst;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * 专门为写大型 excel 而生

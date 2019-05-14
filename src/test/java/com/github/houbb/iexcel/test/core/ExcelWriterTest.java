@@ -1,10 +1,12 @@
 package com.github.houbb.iexcel.test.core;
 
+import com.github.houbb.heaven.util.nio.PathUtil;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.core.writer.impl.SXSSFExcelWriter;
 import com.github.houbb.iexcel.test.model.ExcelFieldModel;
 import com.github.houbb.iexcel.util.excel.ExcelUtil;
-import org.junit.jupiter.api.Test;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,36 +21,9 @@ import java.util.*;
 public class ExcelWriterTest {
 
     @Test
-    public void onceWriteAndFlush03Test() {
-        final String path = "5.xls";
-        List<ExcelFieldModel> modelList = new ArrayList();
-        ExcelFieldModel indexModel = new ExcelFieldModel();
-        indexModel.setName("你好");
-        indexModel.setAge("10");
-        indexModel.setAddress("地址");
-        indexModel.setEmail("1@qq.com");
-        modelList.add(indexModel);
-
-//        ExcelUtil.onceWriteAndFlush(ExcelTypeEnum.XLS, null, modelList, path);
-    }
-
-    @Test
-    public void onceWriteAndFlushTest() {
-        final String path = "3.xlsx";
-        List<ExcelFieldModel> modelList = new ArrayList();
-        ExcelFieldModel indexModel = new ExcelFieldModel();
-        indexModel.setName("你好");
-        indexModel.setAge("10");
-        indexModel.setAddress("地址");
-        indexModel.setEmail("1@qq.com");
-        modelList.add(indexModel);
-
-//        ExcelUtil.onceWriteAndFlush(modelList, path);
-    }
-
-    @Test
     public void listBeanTest() throws FileNotFoundException {
-        final String path = "4.xlsx";
+        final String path = PathUtil.getAppTestResourcesPath()+"/listBean.xls";
+
         List<ExcelFieldModel> modelList = new ArrayList();
         ExcelFieldModel indexModel = new ExcelFieldModel();
         indexModel.setName("你好");
@@ -67,6 +42,7 @@ public class ExcelWriterTest {
     }
 
     @Test
+    @Ignore
     public void bigListBeanTest() throws FileNotFoundException {
         final String path = "5.xlsx";
         List<ExcelFieldModel> modelList = new ArrayList();
@@ -90,14 +66,14 @@ public class ExcelWriterTest {
 
     @Test
     public void mapListTest() {
-        final String path = "2.xls";
+        final String path = PathUtil.getAppTestResourcesPath()+"/map.xls";
 
         Map<String, Object> map = new HashMap<>();
         map.put("name", "名字");
         map.put("ADDRESS", "外滩38号");
 
         try(OutputStream outputStream = new FileOutputStream(path);
-            IExcelWriter writer = ExcelUtil.get03ExcelWriter();) {
+            IExcelWriter writer = ExcelUtil.get03ExcelWriter()) {
             writer.write(Arrays.asList(map), ExcelFieldModel.class);
             writer.flush(outputStream);
         } catch (IOException e) {

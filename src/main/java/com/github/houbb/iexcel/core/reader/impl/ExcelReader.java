@@ -1,12 +1,12 @@
 package com.github.houbb.iexcel.core.reader.impl;
 
+import com.github.houbb.heaven.util.lang.StringUtil;
+import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
 import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
-import com.github.houbb.iexcel.util.ClassUtil;
-import com.github.houbb.iexcel.util.StrUtil;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,12 +25,13 @@ import java.util.*;
 /**
  * excel reader 的基础实现
  * 注意：这个类在阅读的量较大时会存在问题。
+ *
  * @author binbin.hou
  * date 2018/11/15 20:00
+ * @since 0.0.1
  */
 public class ExcelReader<T> implements IExcelReader<T> {
 
-    //region 私有变量
     /**
      * 当前 sheet 的信息
      */
@@ -41,17 +42,15 @@ public class ExcelReader<T> implements IExcelReader<T> {
      * 如果没有表头可以设置为 false 说明
      */
     private boolean containsHead = true;
-    //endregion
 
-
-    //region 对象初始化
     public ExcelReader(File excelFile) {
         this(excelFile, null);
     }
 
     /**
      * 获取 excel 读取实现
-     * @param excelFile excel 文件信息
+     *
+     * @param excelFile  excel 文件信息
      * @param sheetIndex 从0开始
      */
     public ExcelReader(File excelFile, int sheetIndex) {
@@ -61,7 +60,7 @@ public class ExcelReader<T> implements IExcelReader<T> {
 
     public ExcelReader(File excelFile, String sheetName) {
         Workbook workbook = initWorkbook(excelFile);
-        if(StrUtil.isBlank(sheetName)) {
+        if (StringUtil.isBlank(sheetName)) {
             sheetName = ExcelConst.DEFAULT_SHEET_NAME;
         }
         this.sheet = workbook.getSheet(sheetName);
@@ -69,21 +68,19 @@ public class ExcelReader<T> implements IExcelReader<T> {
 
     /**
      * 设置是否包含表头
-     * @param containsHead  是否包含表头
+     *
+     * @param containsHead 是否包含表头
      * @return this
      */
     public ExcelReader containsHead(final boolean containsHead) {
         this.containsHead = containsHead;
         return this;
     }
-    //endregion 对象初始化
-
-
-
 
     /**
      * 读取所有的信息
      * 1. 这里的第一行怎么处理 表头的信息？还是按照和导出保持一致？
+     *
      * @param tClass 类
      * @return 列表
      */
@@ -106,21 +103,23 @@ public class ExcelReader<T> implements IExcelReader<T> {
             Row firstLineRow = sheet.getRow(firstRowNum);
             Map<Integer, Field> cellFieldMap = getCellFieldMap(tClass, firstLineRow);
 
-            if(containsHead) {
+            if (containsHead) {
                 //跳过成为表头处理的那一行
                 firstRowNum++;
             }
-            for(int index = firstRowNum; index <= lastRowNum; index++) {
+            for (int index = firstRowNum; index <= lastRowNum; index++) {
                 Row row = sheet.getRow(index);
                 T instance = tClass.newInstance();
 
-                for(int cIndex : cellFieldMap.keySet()) {
+                for(Map.Entry<Integer, Field> entry : cellFieldMap.entrySet()) {
+                    final Integer cIndex = entry.getKey();
+                    final Field field = entry.getValue();
                     // 根据字段处理字段信息
                     Cell cell = row.getCell(cIndex);
                     Object cellValue = InnerExcelUtil.getCellValue(cell, cell.getCellTypeEnum());
-                    Field field = cellFieldMap.get(cIndex);
                     field.set(instance, cellValue);
                 }
+
                 resultList.add(instance);
             }
             return resultList;
@@ -129,19 +128,18 @@ public class ExcelReader<T> implements IExcelReader<T> {
         }
     }
 
-    //region private 方法
     /**
      * 获取 workbook 信息
+     *
      * @return workbook
      */
     private Workbook initWorkbook(final File excelFile) {
-        try {
-            final InputStream inputStream = new FileInputStream(excelFile);
+        try (final InputStream inputStream = new FileInputStream(excelFile)) {
             final String fileName = excelFile.getName();
-            if(fileName.endsWith(ExcelTypeEnum.XLS.getValue())) {
+            if (fileName.endsWith(ExcelTypeEnum.XLS.getValue())) {
                 return new HSSFWorkbook(inputStream);
             }
-            if(fileName.endsWith(ExcelTypeEnum.XLSX.getValue())) {
+            if (fileName.endsWith(ExcelTypeEnum.XLSX.getValue())) {
                 return new XSSFWorkbook(inputStream);
             }
             throw new ExcelRuntimeException("不支持的 excel 文件类型!");
@@ -153,7 +151,8 @@ public class ExcelReader<T> implements IExcelReader<T> {
     /**
      * 获取 excel 列信息和 Field 之间的映射关系
      * 1. 如果有表头，则严格要求 bean 中的表头名称，在 excel 中都有。
-     * @param tClass 类信息
+     *
+     * @param tClass       类信息
      * @param firstLineRow 第一行的信息
      * @return 映射 map  Integer 对应的是 cell 的实际列数， Field 是指对应的 bean 字段信息
      */
@@ -165,20 +164,21 @@ public class ExcelReader<T> implements IExcelReader<T> {
 
         Map<String, Field> readRequireFieldMap = readRequireFieldMap(tClass);
 
-        if(containsHead) {
+        if (containsHead) {
             // 包含表头的逻辑出路
             // 如果有表头，则严格要求 bean 中的表头名称，在 excel 中都有。
             // 为什么要有这个强制的约束？如果 bean 中的字段,excel中却没有。那么这个 readRequire 应该被声明为 false;
             Map<String, Integer> cellHeadNameIndexMap = cellHeadNameIndexMap(firstLineRow);
-            for(String headName : readRequireFieldMap.keySet()) {
-                Field field = readRequireFieldMap.get(headName);
+            for(Map.Entry<String, Field> entry : readRequireFieldMap.entrySet()) {
+                final String headName = entry.getKey();
+                final Field field = entry.getValue();
                 Integer index = cellHeadNameIndexMap.get(headName);
-                if(index != null) {
+                if (index != null) {
                     cellFieldMap.put(index, field);
                 }
             }
             // 判断是否所有的字段都有对应的 cell
-            if(cellFieldMap.size() < readRequireFieldMap.size()) {
+            if (cellFieldMap.size() < readRequireFieldMap.size()) {
                 throw new ExcelRuntimeException("指定的表头字段信息和 excel 不符合");
             }
             return cellFieldMap;
@@ -187,11 +187,11 @@ public class ExcelReader<T> implements IExcelReader<T> {
         // 这个列数需要是 实际 excel 的列和实际 field 的列数的最小值。
         Integer cellIndex = firstCellNum;
         Collection<Field> fieldList = readRequireFieldMap.values();
-        for(Field field : fieldList) {
+        for (Field field : fieldList) {
             cellFieldMap.put(cellIndex, field);
             cellIndex++;
             // 已经达到了 excel 的最后一列
-            if(cellIndex > lastCellNum) {
+            if (cellIndex > lastCellNum) {
                 break;
             }
         }
@@ -201,6 +201,7 @@ public class ExcelReader<T> implements IExcelReader<T> {
 
     /**
      * 表头名称和 index 集合
+     *
      * @param headRow 表头
      * @return map
      */
@@ -209,7 +210,7 @@ public class ExcelReader<T> implements IExcelReader<T> {
         final int firstCellNum = headRow.getFirstCellNum();
         final int lastCellNum = headRow.getLastCellNum();
 
-        for(int i = firstCellNum; i <lastCellNum; i++) {
+        for (int i = firstCellNum; i < lastCellNum; i++) {
             map.put(headRow.getCell(i).getStringCellValue(), i);
         }
 
@@ -218,17 +219,18 @@ public class ExcelReader<T> implements IExcelReader<T> {
 
     /**
      * 获取需要读取的字段 map
+     *
      * @param tClass 当前类信息
      * @return map
      */
     private Map<String, Field> readRequireFieldMap(final Class<?> tClass) {
         Map<String, Field> map = new HashMap<>();
         List<Field> fieldList = ClassUtil.getAllFieldList(tClass);
-        for(Field field : fieldList) {
-            if(field.isAnnotationPresent(ExcelField.class)) {
+        for (Field field : fieldList) {
+            if (field.isAnnotationPresent(ExcelField.class)) {
                 ExcelField excelField = field.getAnnotation(ExcelField.class);
                 boolean readRequire = excelField.readRequire();
-                if(readRequire) {
+                if (readRequire) {
                     final String headName = InnerExcelUtil.getFieldHeadName(excelField, field);
                     map.put(headName, field);
                 }
@@ -236,6 +238,5 @@ public class ExcelReader<T> implements IExcelReader<T> {
         }
         return map;
     }
-    //endregion
 
 }

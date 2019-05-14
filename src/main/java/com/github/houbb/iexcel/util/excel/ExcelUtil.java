@@ -25,6 +25,11 @@ import java.util.List;
  */
 public final class ExcelUtil {
 
+    /**
+     * 构造器私有化
+     */
+    private ExcelUtil(){}
+
     //region writer
     /**
      * 获取 2003 版本的 excel

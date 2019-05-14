@@ -1,8 +1,9 @@
 package com.github.houbb.iexcel.test.core;
 
+import com.github.houbb.heaven.util.nio.PathUtil;
 import com.github.houbb.iexcel.sax.Sax07ExcelReader;
 import com.github.houbb.iexcel.test.model.ExcelFieldModel;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +16,7 @@ public class ExcelSax07ReaderTest {
 
     @Test
     public void readAllTest() {
-        final String path = "1.xlsx";
+        final String path = PathUtil.getAppTestResourcesPath()+"/onceWriterAndFlush07.xlsx";
         List<ExcelFieldModel> modelList = new Sax07ExcelReader<ExcelFieldModel>(new File(path))
                 .readAll(ExcelFieldModel.class);
         System.out.println(modelList);
@@ -26,7 +27,7 @@ public class ExcelSax07ReaderTest {
      */
     @Test
     public void readAllTest2() {
-        final String path = "4.xlsx";
+        final String path = PathUtil.getAppTestResourcesPath()+"/onceWriterAndFlush07.xlsx";
         List<ExcelFieldModel> modelList = new Sax07ExcelReader<ExcelFieldModel>(new File(path))
                 .readAll(ExcelFieldModel.class);
         System.out.println(modelList);
