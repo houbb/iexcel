@@ -7,6 +7,7 @@ import com.github.houbb.heaven.util.util.CollectionUtil;
 import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
+import com.github.houbb.iexcel.core.writer.impl.AbstractExcelWriter;
 import com.github.houbb.iexcel.util.excel.ExcelUtil;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public final class ExcelBs {
     private String path;
 
     /**
-     * 写入大 excel 模式
+     * 大 excel 模式
      */
     private boolean bigExcelMode = false;
 
@@ -149,8 +150,9 @@ public final class ExcelBs {
      * 读取当前 sheet 的所有信息
      * @param tClass 对应的 javabean 类型
      * @return 对象列表
+     * @since 0.0.4
      */
-    <T> List<T> read(Class<T> tClass) {
+    public <T> List<T> read(Class<T> tClass) {
         IExcelReader excelReader = getExcelReader();
         return excelReader.readAll(tClass);
     }
@@ -158,11 +160,12 @@ public final class ExcelBs {
     /**
      * 读取指定范围内的
      * @param tClass 泛型
-     * @param startIndex 开始的行信息(从0开始)
+     * @param startIndex 开始的行信息(从0开始) 是不包含 head 行的。
      * @param endIndex 结束的行信息
      * @return 读取的对象列表
+     * @since 0.0.4
      */
-    <T> List<T> read(Class<T> tClass, final int startIndex, final int endIndex) {
+    public <T> List<T> read(Class<T> tClass, final int startIndex, final int endIndex) {
         IExcelReader excelReader = getExcelReader();
         return excelReader.read(tClass, startIndex, endIndex);
     }

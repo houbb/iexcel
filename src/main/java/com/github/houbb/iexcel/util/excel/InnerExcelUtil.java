@@ -11,6 +11,8 @@ import com.github.houbb.iexcel.style.StyleSet;
 import org.apache.poi.ss.usermodel.*;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -164,9 +166,11 @@ public final class InnerExcelUtil {
      *
      * @param cell {@link Cell}单元格
      * @param cellType 单元格值类型{@link CellType}枚举，如果为{@code null}默认使用cell的类型
+     * @param fieldType 字段类型  0.0.4
      * @return 值，类型可能为：Date、Double、Boolean、String
      */
-    public static Object getCellValue(Cell cell, CellType cellType) {
+    public static Object getCellValue(Cell cell, CellType cellType,
+                                      final Class fieldType) {
         if (null == cell) {
             return null;
         }
@@ -177,14 +181,14 @@ public final class InnerExcelUtil {
         Object value;
         switch (cellType) {
             case NUMERIC:
-                value = getNumericValue(cell);
+                value = getNumericValue(cell, fieldType);
                 break;
             case BOOLEAN:
                 value = cell.getBooleanCellValue();
                 break;
             case FORMULA:
                 // 遇到公式时查找公式结果类型
-                value = getCellValue(cell, cell.getCachedFormulaResultTypeEnum());
+                value = getCellValue(cell, cell.getCachedFormulaResultTypeEnum(), fieldType);
                 break;
             case BLANK:
                 value = StringUtil.EMPTY;
@@ -202,34 +206,46 @@ public final class InnerExcelUtil {
 
     /**
      * 获取数字类型的单元格值
-     *
+     * TODO: 这里可以直接根据字符串，反序列化。
+     * 暂时先保持轻量。
      * @param cell 单元格
+     * @param fieldType 字段类型 0.0.4 添加字段类型调整
      * @return 单元格值，可能为Long、Double、Date
+     * @see java.math.BigDecimal
+     * @see java.math.BigInteger
      */
-    private static Object getNumericValue(Cell cell) {
-        final double value = cell.getNumericCellValue();
-
-        final CellStyle style = cell.getCellStyle();
-        if (null == style) {
-            return value;
-        }
-
-        final short formatIndex = style.getDataFormat();
+    private static Object getNumericValue(Cell cell, final Class fieldType) {
         // 判断是否为日期
-        if (isDateType(cell, formatIndex)) {
+        if (Date.class.equals(fieldType)) {
             cell.getDateCellValue();
         }
 
-        final String format = style.getDataFormatString();
-        // 普通数字
-        if (null != format && format.indexOf(CharConst.DOT) < 0) {
-            final long longPart = (long) value;
-            if (longPart == value) {
-                // 对于无小数部分的数字类型，转为Long
-                return longPart;
-            }
+        // 基本的类型转换
+        // int/double/float/long/short/BigInteger/BigDecimal
+        double doubleVal = cell.getNumericCellValue();
+        if(int.class == fieldType
+            || Integer.class == fieldType) {
+            return (int)doubleVal;
         }
-        return value;
+        if(float.class == fieldType
+                || Float.class == fieldType) {
+            return (float)doubleVal;
+        }
+        if(double.class == fieldType
+            || Double.class == fieldType) {
+            return doubleVal;
+        }
+        if(short.class == fieldType
+                || Short.class == fieldType) {
+            return (short)doubleVal;
+        }
+        if(fieldType == BigInteger.class) {
+            return new BigInteger(cell.getStringCellValue());
+        }
+        if(fieldType == BigDecimal.class) {
+            return BigDecimal.valueOf(doubleVal);
+        }
+        return cell.getNumericCellValue();
     }
 
     /**

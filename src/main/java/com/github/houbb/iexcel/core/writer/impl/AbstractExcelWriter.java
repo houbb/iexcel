@@ -242,21 +242,23 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
      * 初始化标题别名
      */
     private void initHeaderAlias(final Object object) {
-        if(!ClassTypeUtil.isBean(object.getClass())) {
-            throw new ExcelRuntimeException("列表必须为 java Bean 对象列表");
-        }
+        // 这里可以添加类型校验
 
         // 一定要指定为有序的 Map
         headerAliasMap = new LinkedHashMap<>();
-        Field[] fields = object.getClass().getDeclaredFields();
-        for (Field field : fields) {
+        List<Field> fieldList = ClassUtil.getAllFieldList(object.getClass());
+        for (Field field : fieldList) {
+            final String fieldName = field.getName();
+
             if (field.isAnnotationPresent(ExcelField.class)) {
                 ExcelField excel = field.getAnnotation(ExcelField.class);
-                final String fieldName = field.getName();
                 final String headName = InnerExcelUtil.getFieldHeadName(excel, field);
                 if (excel.writeRequire()) {
                     headerAliasMap.put(fieldName, headName);
                 }
+            } else {
+                // 默认直接使用 fieldName
+                headerAliasMap.put(fieldName, fieldName);
             }
         }
 

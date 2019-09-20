@@ -18,13 +18,13 @@
 
 - 设计简单，注释完整。方便大家学习改造。
 
-## v0.0.3 主要变化
-
-- 使用 jdk7 重新编译发布，使用范围更广泛。
-
-- 修复列表多次插入，表头重复生成的 BUG
+## 变更日志
 
 > [变更日志](doc/CHANGELOG.md)
+
+## v0.0.4 主要变化
+
+- 引入 ExcelBs 引导类，优化使用体验。
 
 # 创作缘由
 
@@ -42,7 +42,13 @@
 
 # 快速开始
 
-## 引入 Jar
+## 环境要求
+
+jdk1.7+
+
+maven 3.x
+
+## 引入 jar
 
 使用 maven 管理。
 
@@ -50,253 +56,101 @@
 <dependency>
      <groupId>com.github.houbb</groupId>
      <artifactId>iexcel</artifactId>
-     <version>0.0.3</version>
+     <version>0.0.4</version>
 </dependency>
 ```
 
-## 定义对象
+## Excel 写入
 
-你可以直接参考 [ExcelUtilTest.java](src\test\java\com\github\houbb\iexcel\test\util\ExcelUtilTest.java)
-
-定义一个需要写入/读取的 excel 对象。
-
-- ExcelFieldModel.java
-
-只有声明了 `@ExcelField` 的属性才会被处理，使用说明：[`@ExcelField`](#ExcelField-注解说明)
+### 示例
 
 ```java
-public class ExcelFieldModel {
+/**
+ * 写入到 excel 文件
+ * 直接将列表内容写入到文件
+ */
+public void writeTest() {
+    // 待生成的 excel 文件路径
+    final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
 
-    @ExcelField
+    // 对象列表
+    List<User> models = User.buildUserList();
+
+    // 直接写入到文件
+    ExcelBs.newInstance(filePath).write(models);
+}
+```
+
+其中：
+
+- User.java
+
+```java
+public class User {
+
     private String name;
 
-    @ExcelField(headName = "年龄")
-    private String age;
+    private int age;
 
-    @ExcelField(mapKey = "EMAIL", writeRequire = false, readRequire = false)
-    private String email;
-
-    @ExcelField(mapKey = "ADDRESS", headName = "地址", writeRequire = true)
-    private String address;
-    
-    //getter and setter
+    //fluent getter/setter/toString()
 }
 ```
 
-## 写入例子
+- buildUserList()
 
-### IExcelWriter 的实现
-
-IExcelWriter 有几个实现类，你可以直接 new 或者借助 `ExcelUtil` 类去创建。
-
-| IExcelWriter 实现类 | ExcelUtil 如何创建 | 说明 | 
-|:---|:---|:---|
-| HSSFExcelWriter | ExcelUtil.get03ExcelWriter() | 2003 版本的 excel |
-| XSSFExcelWriter | ExcelUtil.get07ExcelWriter() | 2007 版本的 excel |
-| SXSSFExcelWriter | ExcelUtil.getBigExcelWriter() | 大文件 excel，避免 OOM |
-
-> [IExcelWriter 接口说明](#IExcelWriter-接口说明)
-
-### 写入到 2003 
-
-- excelWriter03Test()
-
-一个将对象列表写入 2003 excel 文件的例子。
+构建对象列表方法如下：
 
 ```java
 /**
- * 写入到 03 excel 文件
+ * 构建用户类表
+ * @return 用户列表
+ * @since 0.0.4
  */
-@Test
-public void excelWriter03Test() {
+public static List<User> buildUserList() {
+    List<User> users = new ArrayList<>();
+    users.add(new User().name("hello").age(20));
+    users.add(new User().name("excel").age(19));
+    return users;
+}
+```
+
+### 写入效果
+
+excel 内容生成为：
+
+```
+name	age
+hello	20
+excel	19
+```
+
+## Excel 读取
+
+### 示例
+
+```java
+/**
+ * 读取 excel 文件中所有信息
+ */
+public void readTest() {
     // 待生成的 excel 文件路径
-    final String filePath = "excelWriter03.xls";
-
-    // 对象列表
-    List<ExcelFieldModel> models = buildModelList();
-
-    try(IExcelWriter excelWriter = ExcelUtil.get03ExcelWriter();
-        OutputStream outputStream = new FileOutputStream(filePath)) {
-        // 可根据实际需要，多次写入列表
-        excelWriter.write(models);
-
-        // 将列表内容真正的输出到 excel 文件
-        excelWriter.flush(outputStream);
-    } catch (IOException e) {
-        throw new ExcelRuntimeException(e);
-    }
+    final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
+    List<User> userList = ExcelBs.newInstance(filePath).read(User.class);
+    System.out.println(userList);
 }
 ```
 
-- buildModelList()
+### 信息
 
-```java
-/**
- * 构建测试的对象列表
- * @return 对象列表
- */
-private List<ExcelFieldModel> buildModelList() {
-    List<ExcelFieldModel> models = new ArrayList<>();
-    ExcelFieldModel model = new ExcelFieldModel();
-    model.setName("测试1号");
-    model.setAge("25");
-    model.setEmail("123@gmail.com");
-    model.setAddress("贝克街23号");
-
-    ExcelFieldModel modelTwo = new ExcelFieldModel();
-    modelTwo.setName("测试2号");
-    modelTwo.setAge("30");
-    modelTwo.setEmail("125@gmail.com");
-    modelTwo.setAddress("贝克街26号");
-
-    models.add(model);
-    models.add(modelTwo);
-    return models;
-}
+```
+[User{name='hello', age=20}, User{name='excel', age=19}]
 ```
 
-### 一次性写入到 2007 excel 
+# 文档
 
-有时候列表只写入一次很常见，所有就简单的封装了下：
+[01-ExcelBs 引导类使用说明](doc/user/01-ExcelBs引导类讲解.md)
 
-```java
-/**
- * 只写入一次列表
- * 其实是对原来方法的简单封装
- */
-@Test
-public void onceWriterAndFlush07Test() {
-    // 待生成的 excel 文件路径
-    final String filePath = "onceWriterAndFlush07.xlsx";
-
-    // 对象列表
-    List<ExcelFieldModel> models = buildModelList();
-
-    // 对应的 excel 写入对象
-    IExcelWriter excelWriter = ExcelUtil.get07ExcelWriter();
-
-    // 只写入一次列表
-    ExcelUtil.onceWriteAndFlush(excelWriter, models, filePath);
-}
-```
-
-## 读取例子
-
-excel 读取时会根据文件名称判断是哪个版本的 excel。 
-
-### IExcelReader 的实现
-
-IExcelReader 有几个实现类，你可以直接 new 或者借助 `ExcelUtil` 类去创建。
-
-| IExcelReader 实现类 | ExcelUtil 如何创建 | 说明 | 
-|:---|:---|:---|
-| ExcelReader | ExcelUtil.getExcelReader() | 小文件的 excel 读取实现 |
-| Sax03ExcelReader | ExcelUtil.getBigExcelReader() | 大文件的 2003 excel 读取实现 |
-| Sax07ExcelReader | ExcelUtil.getBigExcelReader() | 大文件的 2007 excel 读取实现 |
-
-> [IExcelReader 接口说明](#IExcelReader-接口说明)
-
-### excel 读取的例子
-
-```java
-/**
- * 读取测试
- */
-@Test
-public void readWriterTest() {
-    File file = new File("excelWriter03.xls");
-    IExcelReader<ExcelFieldModel> excelReader = ExcelUtil.getExcelReader(file);
-    List<ExcelFieldModel> models = excelReader.readAll(ExcelFieldModel.class);
-    System.out.println(models);
-}
-```
-
-# ExcelField 注解说明
-
-`@ExcelField` 的属性说明如下：
-
-| 属性 | 类型 | 默认值 | 说明 |
-|:----|:----|:----|:----|
-| mapKey | String | `""` | 仅用于生成的入参为 map 时,会将 map.key 对应的值映射到 bean 上。如果不传：默认使用当前字段名称 | 
-| headName | String | `""` | excel 表头字段名称，如果不传：默认使用当前字段名称 | 
-| writeRequire | boolean | true | excel 文件是否需要写入此字段 | 
-| readRequire | boolean | true | excel 文件是否读取此字段 | 
-
-# IExcelWriter 接口说明
-
-```java
-/**
- * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
- * <p>
- * data中元素支持的类型有：
- *  <pre>
- * 1. Bean，既元素为一个Bean，第一个Bean的字段名列表会作为首行，剩下的行为Bean的字段值列表，data表示多行 <br>
- * </pre>
- * @param data 数据
- * @return this
- */
-IExcelWriter write(Collection<?> data);
-
-/**
- * 写出数据，本方法只是将数据写入Workbook中的Sheet，并不写出到文件<br>
- *  将 map 按照 targetClass 转换为对象列表
- *  应用场景: 直接 mybatis mapper 查询出的 map 结果，或者其他的构造结果。
- * @param mapList map 集合
- * @param targetClass 目标类型
- * @return this
- */
-IExcelWriter write(Collection<Map<String, Object>> mapList, final Class<?> targetClass);
-
-/**
- * 将Excel Workbook刷出到输出流
- *
- * @param outputStream 输出流
- * @return this
- */
-IExcelWriter flush(OutputStream outputStream);
-```
-
-## 指定 sheet
-
-创建 IExcelWriter 的时候，可以指定 sheet 的下标或者名称。来指定写入的 sheet。
-
-## 是否包含表头
-
-创建 IExcelWriter 的后，可以调用 `excelWriter.containsHead(bool)` 指定是否生成 excel 表头。
-
-# IExcelReader 接口说明
-
-```java
-/**
- * 读取当前 sheet 的所有信息
- * @param tClass 对应的 javabean 类型
- * @return 对象列表
- */
-List<T> readAll(Class<T> tClass);
-
-/**
- * 读取指定范围内的
- * @param tClass 泛型
- * @param startIndex 开始的行信息(从0开始)
- * @param endIndex 结束的行信息
- * @return 读取的对象列表
- */
-List<T> read(Class<T> tClass, final int startIndex, final int endIndex);
-```
-
-## 指定 sheet
-
-创建 IExcelReader 的时候，可以指定 sheet 的下标或者名称。来指定读取的 sheet。
-
-注意：大文件 sax 读取模式，只支持指定 sheet 的下标。
-
-## 是否包含表头
-
-创建 IExcelReader 的后，可以调用 `excelReader.containsHead(bool)` 指定是否读取 excel 表头。
-
-# 变更日志
-
-> [变更日志](doc/CHANGELOG.md)
+[02-ExcelField 注解指定字段属性]()
 
 # Bug & Issues
 

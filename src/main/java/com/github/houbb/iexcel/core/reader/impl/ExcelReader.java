@@ -96,27 +96,29 @@ public class ExcelReader<T> implements IExcelReader<T> {
         List<T> resultList = new ArrayList<>();
 
         int firstRowNum = sheet.getFirstRowNum();
-        int lastRowNum = sheet.getLastRowNum();
-
         try {
+            //TODO 这里暂时不管，固定是要处理表头的
+            // 如果不处理表头，那么 cellFieldMap 固定为 field.name+field 即可。
             // 如果没有表头 则默认和字段含有
             Row firstLineRow = sheet.getRow(firstRowNum);
             Map<Integer, Field> cellFieldMap = getCellFieldMap(tClass, firstLineRow);
 
-            if (containsHead) {
+            if (containsHead
+                && firstRowNum == startIndex) {
                 //跳过成为表头处理的那一行
-                firstRowNum++;
+                startIndex++;
             }
-            for (int index = firstRowNum; index <= lastRowNum; index++) {
+            for (int index = startIndex; index <= endIndex; index++) {
                 Row row = sheet.getRow(index);
                 T instance = tClass.newInstance();
 
                 for(Map.Entry<Integer, Field> entry : cellFieldMap.entrySet()) {
                     final Integer cIndex = entry.getKey();
                     final Field field = entry.getValue();
+                    final Class fieldType = field.getType();
                     // 根据字段处理字段信息
                     Cell cell = row.getCell(cIndex);
-                    Object cellValue = InnerExcelUtil.getCellValue(cell, cell.getCellTypeEnum());
+                    Object cellValue = InnerExcelUtil.getCellValue(cell, cell.getCellTypeEnum(), fieldType);
                     field.set(instance, cellValue);
                 }
 
@@ -234,6 +236,10 @@ public class ExcelReader<T> implements IExcelReader<T> {
                     final String headName = InnerExcelUtil.getFieldHeadName(excelField, field);
                     map.put(headName, field);
                 }
+            } else {
+                //@since0.0.4 默认使用 fieldName
+                final String headName = field.getName();
+                map.put(headName, field);
             }
         }
         return map;

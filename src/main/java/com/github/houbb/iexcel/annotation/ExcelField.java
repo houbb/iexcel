@@ -18,7 +18,9 @@ public @interface ExcelField {
      * 会将 map.key 对应的值映射到 bean 上。
      * 如果不传：默认使用当前字段名称
      * @return map 对应的键
+     * @deprecated 0.0.4 之后废弃，excel 本身应该专注。对象转换可以交给其他工具。
      */
+    @Deprecated
     String mapKey() default "";
 
     /**

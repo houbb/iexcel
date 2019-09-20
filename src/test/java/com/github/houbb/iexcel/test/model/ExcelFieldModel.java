@@ -3,6 +3,9 @@ package com.github.houbb.iexcel.test.model;
 
 import com.github.houbb.iexcel.annotation.ExcelField;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * excel field model 测试 bean
  * @author houbinbin
@@ -62,5 +65,29 @@ public class ExcelFieldModel {
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 '}';
+    }
+
+    /**
+     * 构建测试的对象列表
+     * @return 对象列表
+     * @since 0.0.4
+     */
+    public static List<ExcelFieldModel> buildModelList() {
+        List<ExcelFieldModel> models = new ArrayList<>();
+        ExcelFieldModel model = new ExcelFieldModel();
+        model.setName("测试1号");
+        model.setAge("25");
+        model.setEmail("123@gmail.com");
+        model.setAddress("贝克街23号");
+
+        ExcelFieldModel modelTwo = new ExcelFieldModel();
+        modelTwo.setName("测试2号");
+        modelTwo.setAge("30");
+        modelTwo.setEmail("125@gmail.com");
+        modelTwo.setAddress("贝克街26号");
+
+        models.add(model);
+        models.add(modelTwo);
+        return models;
     }
 }
