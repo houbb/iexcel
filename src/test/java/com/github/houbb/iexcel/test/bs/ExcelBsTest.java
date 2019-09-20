@@ -23,7 +23,7 @@ public class ExcelBsTest {
     @Test
     public void writeTest() {
         // 待生成的 excel 文件路径
-        final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
+        final String filePath = PathUtil.getAppTestResourcesPath()+"/user.xls";
 
         // 对象列表
         List<User> models = User.buildUserList();
@@ -39,7 +39,7 @@ public class ExcelBsTest {
     @Test
     public void appendTest() {
         // 待生成的 excel 文件路径
-        final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
+        final String filePath = PathUtil.getAppTestResourcesPath()+"/user.xls";
 
         // 对象列表
         List<User> models = User.buildUserList();
@@ -54,7 +54,7 @@ public class ExcelBsTest {
     @Test
     public void readTest() {
         // 待生成的 excel 文件路径
-        final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
+        final String filePath = PathUtil.getAppTestResourcesPath()+"/user.xls";
         List<User> userList = ExcelBs.newInstance(filePath).read(User.class);
         System.out.println(userList);
     }
@@ -65,7 +65,7 @@ public class ExcelBsTest {
     @Test
     public void readIndexTest() {
         // 待生成的 excel 文件路径
-        final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
+        final String filePath = PathUtil.getAppTestResourcesPath()+"/user.xls";
         List<User> userList = ExcelBs.newInstance(filePath).read(User.class, 1, 1);
         System.out.println(userList);
     }
