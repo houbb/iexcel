@@ -1,6 +1,8 @@
 # 项目简介
 
-本项目用于读取和写入 excel。避免 oom，方便操作。
+[IExcel](https://github.com/houbb/iexcel) 用于优雅地读取和写入 excel。
+
+避免大 excel 出现 oom，简约而不简单。。
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.houbb/iexcel/badge.svg)](http://mvnrepository.com/artifact/com.github.houbb/iexcel)
 [![Build Status](https://www.travis-ci.org/houbb/iexcel.svg?branch=master)](https://www.travis-ci.org/houbb/iexcel?branch=master)

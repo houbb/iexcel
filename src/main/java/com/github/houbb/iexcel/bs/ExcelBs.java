@@ -151,6 +151,7 @@ public final class ExcelBs {
      * @param tClass 对应的 javabean 类型
      * @return 对象列表
      * @since 0.0.4
+     * @param <T> 泛型
      */
     public <T> List<T> read(Class<T> tClass) {
         IExcelReader excelReader = getExcelReader();
@@ -164,6 +165,7 @@ public final class ExcelBs {
      * @param endIndex 结束的行信息
      * @return 读取的对象列表
      * @since 0.0.4
+     * @param <T> 泛型
      */
     public <T> List<T> read(Class<T> tClass, final int startIndex, final int endIndex) {
         IExcelReader excelReader = getExcelReader();
