@@ -141,7 +141,7 @@ public final class ExcelUtil {
      * @return excel 普通读取
      */
     public static IExcelReader getExcelReader(final File excelFile, final int sheetIndex) {
-        return new ExcelReader(excelFile);
+        return new ExcelReader(excelFile, sheetIndex);
     }
 
     /**
@@ -168,9 +168,9 @@ public final class ExcelUtil {
     public static IExcelReader getBigExcelReader(final File excelFile, final int sheetIndex) {
         final String fileName = excelFile.getName();
         if (fileName.endsWith(ExcelTypeEnum.XLS.getValue())) {
-            return new Sax03ExcelReader(excelFile);
+            return new Sax03ExcelReader(excelFile, sheetIndex);
         }
-        return new Sax07ExcelReader(excelFile);
+        return new Sax07ExcelReader(excelFile, sheetIndex);
     }
     //endregion
 

@@ -1,5 +1,6 @@
 package com.github.houbb.iexcel.util.excel;
 
+import com.github.houbb.heaven.constant.CharConst;
 import com.github.houbb.heaven.constant.PunctuationConst;
 import com.github.houbb.heaven.util.lang.StringUtil;
 import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
@@ -221,7 +222,7 @@ public final class InnerExcelUtil {
 
         final String format = style.getDataFormatString();
         // 普通数字
-        if (null != format && format.indexOf(PunctuationConst.C_DOT) < 0) {
+        if (null != format && format.indexOf(CharConst.DOT) < 0) {
             final long longPart = (long) value;
             if (longPart == value) {
                 // 对于无小数部分的数字类型，转为Long

@@ -1,5 +1,6 @@
 package com.github.houbb.iexcel.sax.util;
 
+import com.github.houbb.heaven.constant.CharConst;
 import com.github.houbb.heaven.constant.PunctuationConst;
 import com.github.houbb.heaven.util.lang.StringUtil;
 import org.apache.poi.xssf.model.SharedStringsTable;
@@ -131,7 +132,7 @@ public final class ExcelSaxUtil {
         }
         double numValue = Double.parseDouble(value);
         // 普通数字
-        if (null != numFmtString && numFmtString.indexOf(PunctuationConst.C_DOT) < 0) {
+        if (null != numFmtString && numFmtString.indexOf(CharConst.DOT) < 0) {
             final long longPart = (long) numValue;
             if (longPart == numValue) {
                 // 对于无小数部分的数字类型，转为Long
