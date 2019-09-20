@@ -3,6 +3,7 @@ package com.github.houbb.iexcel.test.bs;
 import com.github.houbb.heaven.util.nio.PathUtil;
 import com.github.houbb.iexcel.bs.ExcelBs;
 import com.github.houbb.iexcel.test.model.User;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * @author binbin.hou
  * @since 0.0.4
  */
+@Ignore
 public class ExcelBsTest {
 
     /**
