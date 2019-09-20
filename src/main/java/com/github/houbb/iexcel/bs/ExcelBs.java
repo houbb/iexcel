@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Excel Bs
+ * 优化调用体验，屏蔽实现细节。
  * @author binbin.hou
  * @since 0.0.4
  */
@@ -27,11 +28,6 @@ public final class ExcelBs {
      * 文件路径
      */
     private String path;
-
-    /**
-     * sheet 名称
-     */
-    private String sheet;
 
     /**
      * 写入大 excel 模式
@@ -51,15 +47,6 @@ public final class ExcelBs {
     public static ExcelBs newInstance(final String path) {
         ExcelBs excelBs = new ExcelBs();
         return excelBs.path(path);
-    }
-
-    public String sheet() {
-        return sheet;
-    }
-
-    public ExcelBs sheet(String sheet) {
-        this.sheet = sheet;
-        return this;
     }
 
     /**
@@ -130,12 +117,12 @@ public final class ExcelBs {
     private IExcelWriter getExcelWriter() {
         IExcelWriter excelWriter;
         if(bigExcelMode) {
-            excelWriter = ExcelUtil.getBigExcelWriter(sheet);
+            excelWriter = ExcelUtil.getBigExcelWriter();
         } else {
             if(path.endsWith(ExcelTypeEnum.XLS.getValue())) {
-                excelWriter = ExcelUtil.get03ExcelWriter(sheet);
+                excelWriter = ExcelUtil.get03ExcelWriter();
             } else {
-                excelWriter = ExcelUtil.get07ExcelWriter(sheet);
+                excelWriter = ExcelUtil.get07ExcelWriter();
             }
         }
         return excelWriter;
@@ -145,7 +132,7 @@ public final class ExcelBs {
 
     /**
      * 获取 excel 读取类
-     * TODO: 考虑 index/name 之间的关系，保证二者不冲突。
+     * TODO: 后续考虑 index/name 之间的关系，保证二者不冲突。
      * 考虑可以使用 index/name 指定读取的 sheet。
      * @return 读取类实现
      */
