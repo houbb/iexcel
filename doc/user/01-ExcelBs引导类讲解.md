@@ -16,7 +16,7 @@ ExcelBs.newInstance("excel文件路径")
 
 ## 属性说明
 | 属性值 | 类型 | 默认值 | 说明 |
-|:---|:--|:---|:--|:--|
+|:---|:--|:---|:--|
 | path | 字符串 | NA | 默认创建 ExcelBs 时要指定，可以通过 path() 方法再次指定。 |
 | bigExcelMode | 布尔 | false | 是否是大 Excel 模式，如果写入/读取的内容较大，建议设置为 true |
 
