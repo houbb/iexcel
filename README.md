@@ -2,7 +2,7 @@
 
 [IExcel](https://github.com/houbb/iexcel) 用于优雅地读取和写入 excel。
 
-避免大 excel 出现 oom，简约而不简单。。
+避免大 excel 出现 oom，简约而不简单。
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.houbb/iexcel/badge.svg)](http://mvnrepository.com/artifact/com.github.houbb/iexcel)
 [![Build Status](https://www.travis-ci.org/houbb/iexcel.svg?branch=master)](https://www.travis-ci.org/houbb/iexcel?branch=master)
@@ -24,9 +24,11 @@
 
 > [变更日志](doc/CHANGELOG.md)
 
-## v0.0.4 主要变化
+## v0.0.5 主要变化
 
-- 引入 ExcelBs 引导类，优化使用体验。
+- 新增 `@ExcelField#order` 属性，可指定列顺序。
+
+- 修复单元格为空时的 NPE 问题
 
 # 创作缘由
 
@@ -58,7 +60,7 @@ maven 3.x
 <dependency>
      <groupId>com.github.houbb</groupId>
      <artifactId>iexcel</artifactId>
-     <version>0.0.4</version>
+     <version>${最新版本}</version>
 </dependency>
 ```
 
@@ -152,7 +154,9 @@ public void readTest() {
 
 [01-ExcelBs 引导类使用说明](doc/user/01-ExcelBs引导类讲解.md)
 
-[02-ExcelField 注解指定字段属性]()
+[02-ExcelField 注解指定字段属性](doc/user/02-ExcelField注解使用说明.md)
+
+[03-ExcelField#order 指定列顺序](doc/user/03-ExcelField-order-列顺序指定.md)
 
 # Bug & Issues
 
