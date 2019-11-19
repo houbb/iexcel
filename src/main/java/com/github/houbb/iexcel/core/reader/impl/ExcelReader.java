@@ -118,7 +118,10 @@ public class ExcelReader<T> implements IExcelReader<T> {
                     final Class fieldType = field.getType();
                     // 根据字段处理字段信息
                     Cell cell = row.getCell(cIndex);
-                    Object cellValue = InnerExcelUtil.getCellValue(cell, cell.getCellTypeEnum(), fieldType);
+                    Object cellValue = "";
+                    if (null != cell) {
+                        cellValue = InnerExcelUtil.getCellValue(cell, cell.getCellTypeEnum(), fieldType);
+                    }
                     field.set(instance, cellValue);
                 }
 
