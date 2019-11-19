@@ -43,4 +43,15 @@ public @interface ExcelField {
      */
     boolean readRequire() default true;
 
+    /**
+     * 指定顺序编号
+     * 解释：默认是按照 Field 信息直接反射处理的，但是有一种情况反射的字段顺序可能会是错乱的。
+     * 如进行内存对齐的时候，这个概率虽然很低，但是可以通过指定 order 属性来处理。
+     * （1）order 值越小，生成 excel 列越靠前。
+     * （2）无注解的字段默认 order=0
+     * @return 顺序编号
+     * @since 0.0.5
+     */
+    int order() default 0;
+
 }

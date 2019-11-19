@@ -1,8 +1,11 @@
 package com.github.houbb.iexcel.core.writer.impl;
 
 
+import com.github.houbb.heaven.support.tuple.impl.Pair;
+import com.github.houbb.heaven.util.common.ArgUtil;
+import com.github.houbb.heaven.util.guava.Guavas;
+import com.github.houbb.heaven.util.lang.ObjectUtil;
 import com.github.houbb.heaven.util.lang.StringUtil;
-import com.github.houbb.heaven.util.lang.reflect.ClassTypeUtil;
 import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
 import com.github.houbb.heaven.util.util.CollectionUtil;
 import com.github.houbb.iexcel.annotation.ExcelField;
@@ -240,30 +243,57 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
 
     /**
      * 初始化标题别名
+     * （1）根据 {@link ExcelField#order()} 进行排序
+     * （2）如果没指定属性值，则默认 order=0
+     *
+     * @since 0.0.5
      */
     private void initHeaderAlias(final Object object) {
         // 这里可以添加类型校验
+        ArgUtil.notNull(object, "object");
 
-        // 一定要指定为有序的 Map
-        headerAliasMap = new LinkedHashMap<>();
+        // 根据 order 进行排序处理
+        Map<Integer, List<Pair<String, String>>> orderedMap = new TreeMap<>();
+
         List<Field> fieldList = ClassUtil.getAllFieldList(object.getClass());
         for (Field field : fieldList) {
             final String fieldName = field.getName();
+
+            // 默认值
+            int order = 0;
+            Pair<String, String> pair = Pair.of(fieldName, fieldName);
 
             if (field.isAnnotationPresent(ExcelField.class)) {
                 ExcelField excel = field.getAnnotation(ExcelField.class);
                 final String headName = InnerExcelUtil.getFieldHeadName(excel, field);
                 if (excel.writeRequire()) {
-                    headerAliasMap.put(fieldName, headName);
+                    pair = Pair.of(fieldName, headName);
+                    order = excel.order();
                 }
-            } else {
-                // 默认直接使用 fieldName
-                headerAliasMap.put(fieldName, fieldName);
             }
+
+            // 设置
+            List<Pair<String, String>> pairList = orderedMap.get(order);
+            if(ObjectUtil.isNull(pairList)) {
+                pairList = Guavas.newArrayList();
+            }
+            pairList.add(pair);
+            orderedMap.put(order, pairList);
         }
 
-        if(MapUtils.isEmpty(headerAliasMap)) {
+        // 按照列表循环处理
+        if(MapUtils.isEmpty(orderedMap)) {
             throw new ExcelRuntimeException("excel 表头信息为空");
+        }
+
+
+        // 按照顺序构建 map 信息
+        headerAliasMap = new LinkedHashMap<>();
+        for(Map.Entry<Integer, List<Pair<String, String>>> entry : orderedMap.entrySet()) {
+            List<Pair<String, String>> pairList = entry.getValue();
+            for(Pair<String, String> pair : pairList) {
+                headerAliasMap.put(pair.getValueOne(), pair.getValueTwo());
+            }
         }
     }
 
