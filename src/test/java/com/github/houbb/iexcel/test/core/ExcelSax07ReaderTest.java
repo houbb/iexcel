@@ -3,6 +3,7 @@ package com.github.houbb.iexcel.test.core;
 import com.github.houbb.heaven.util.nio.PathUtil;
 import com.github.houbb.iexcel.sax.Sax07ExcelReader;
 import com.github.houbb.iexcel.test.model.ExcelFieldModel;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.List;
  * @author binbin.hou
  * date 2018/11/14 21:01
  */
+@Ignore
 public class ExcelSax07ReaderTest {
 
     @Test
