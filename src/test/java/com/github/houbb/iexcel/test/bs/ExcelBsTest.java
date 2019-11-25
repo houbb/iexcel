@@ -1,11 +1,13 @@
 package com.github.houbb.iexcel.test.bs;
 
+import com.github.houbb.heaven.util.io.FileUtil;
 import com.github.houbb.heaven.util.nio.PathUtil;
 import com.github.houbb.iexcel.bs.ExcelBs;
 import com.github.houbb.iexcel.test.model.User;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -68,6 +70,25 @@ public class ExcelBsTest {
         final String filePath = PathUtil.getAppTestResourcesPath()+"/user.xls";
         List<User> userList = ExcelBs.newInstance(filePath).read(User.class, 1, 1);
         System.out.println(userList);
+    }
+
+    /**
+     * 获取对应的输出流
+     * 直接将列表内容写入到文件
+     * @since 0.0.6
+     */
+    @Test
+    @Ignore
+    public void bytesTest() {
+        // 获取对应文件流
+        byte[] bytes = ExcelBs.newInstance()
+                .append(User.buildUserList())
+                .bytes();
+
+        // 根据文件内容，自行选择应用场景，到如 web 下载。
+        // 此处演示文件创建
+        final String filePath = PathUtil.getAppTestResourcesPath()+"/bytes.xls";
+        FileUtil.createFile(filePath, bytes);
     }
 
 }

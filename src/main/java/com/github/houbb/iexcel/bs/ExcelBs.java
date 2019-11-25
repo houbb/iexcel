@@ -3,13 +3,16 @@ package com.github.houbb.iexcel.bs;
 import com.github.houbb.heaven.annotation.ThreadSafe;
 import com.github.houbb.heaven.util.common.ArgUtil;
 import com.github.houbb.heaven.util.guava.Guavas;
+import com.github.houbb.heaven.util.io.FileUtil;
 import com.github.houbb.heaven.util.util.CollectionUtil;
+import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
+import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.util.excel.ExcelUtil;
 
-import java.io.File;
+import java.io.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,23 +29,37 @@ public final class ExcelBs {
 
     /**
      * 文件路径
+     * @since 0.0.4
      */
     private String path;
 
     /**
      * 大 excel 模式
+     * @since 0.0.4
      */
     private boolean bigExcelMode = false;
 
     /**
      * 待写入列表
+     * @since 0.0.4
      */
     private List writeBufferList = Guavas.newArrayList();
 
     /**
-     * 指定编码
+     * 指定文件路径
+     * @return 结果
+     * @since 0.0.6
+     * @see #path(String) 指定文件路径
+     */
+    public static ExcelBs newInstance() {
+        return new ExcelBs();
+    }
+
+    /**
+     * 指定文件路径
      * @param path 文件路径
      * @return 结果
+     * @since 0.0.4
      */
     public static ExcelBs newInstance(final String path) {
         ExcelBs excelBs = new ExcelBs();
@@ -56,7 +73,7 @@ public final class ExcelBs {
      * @since 0.0.4
      */
     public ExcelBs path(final String path) {
-        ArgUtil.notNull(path, "path");
+        ArgUtil.notEmpty(path, "path");
         this.path = path;
         return this;
     }
@@ -79,31 +96,81 @@ public final class ExcelBs {
      * 在写入列表中新增一个对象对象集合
      * @param collection 对象集合
      * @return this
+     * @since 0.0.4
      */
+    @SuppressWarnings("unchecked")
     public ExcelBs append(final Collection<?> collection) {
         if(CollectionUtil.isEmpty(collection)) {
             return this;
         }
 
-        for(Object object : collection) {
-            this.writeBufferList.add(object);
-        }
+        this.writeBufferList.addAll(collection);
         return this;
     }
 
     /**
      * 写入当前缓存中的所有数据
+     * @since 0.0.4
      */
     public void write() {
+        ArgUtil.notEmpty(path, "path");
+
         // 获取对应的 IWrite
-        IExcelWriter excelWriter = getExcelWriter();
+        IExcelWriter excelWriter = getExcelWriter(path);
         // 执行写入
         ExcelUtil.onceWriteAndFlush(excelWriter, writeBufferList, path);
     }
 
     /**
+     * 获取文件输出流信息
+     * 用户需要的流应该是可以直接 web 下载的文件流。
+     * [java使用OutputStream实现下载文件示例](https://www.jianshu.com/p/065c4a5ae3a8)
+     *
+     * 也可以采用如下的思路：
+     * （1）创建临时文件
+     * （2）创建成功后获取对应文件字节信息
+     * （3）删除临时文件。
+     *
+     * 因为直接返回 Stream 可能会导致流忘记关闭等问题。
+     * @return 输出流
+     * @since 0.0.6
+     */
+    public synchronized byte[] bytes() {
+        // 获取对应的 IWrite
+        final String tempFile = getTempFilePath();
+        File file = new File(tempFile);
+        try(IExcelWriter excelWriter = getExcelWriter(tempFile);
+            OutputStream outputStream = new FileOutputStream(file)) {
+
+            // 写入文件
+            excelWriter.write(writeBufferList);
+            excelWriter.flush(outputStream);
+
+            return FileUtil.getFileBytes(file);
+        } catch (IOException e) {
+            throw new ExcelRuntimeException(e);
+        } finally {
+            // 删除创建的文件
+            FileUtil.deleteFile(file);
+        }
+    }
+
+    /**
+     * 获取临时文件路径
+     * @return 文件路径
+     * @since 0.0.6
+     */
+    private String getTempFilePath() {
+        if(bigExcelMode) {
+            return ExcelConst.INNER_EXCEL_TEMP_PREFIX+ExcelTypeEnum.XLSX.getValue();
+        }
+        return ExcelConst.INNER_EXCEL_TEMP_PREFIX+ExcelTypeEnum.XLS.getValue();
+    }
+
+    /**
      * 先写入缓存中的所有数据，然后写入当前集合中的所有数据。
      * @param collection 集合
+     * @since 0.0.4
      */
     public void write(final Collection<?> collection) {
         this.append(collection).write();
@@ -114,12 +181,12 @@ public final class ExcelBs {
      * @return excel 写入类
      * @since 0.0.4
      */
-    private IExcelWriter getExcelWriter() {
+    private IExcelWriter getExcelWriter(final String filePath) {
         IExcelWriter excelWriter;
         if(bigExcelMode) {
             excelWriter = ExcelUtil.getBigExcelWriter();
         } else {
-            if(path.endsWith(ExcelTypeEnum.XLS.getValue())) {
+            if(filePath.endsWith(ExcelTypeEnum.XLS.getValue())) {
                 excelWriter = ExcelUtil.get03ExcelWriter();
             } else {
                 excelWriter = ExcelUtil.get07ExcelWriter();
@@ -135,8 +202,11 @@ public final class ExcelBs {
      * TODO: 后续考虑 index/name 之间的关系，保证二者不冲突。
      * 考虑可以使用 index/name 指定读取的 sheet。
      * @return 读取类实现
+     * @since 0.0.4
      */
     private IExcelReader getExcelReader() {
+        ArgUtil.notEmpty(path, "path");
+
         File file = new File(path);
         if(!bigExcelMode) {
             return ExcelUtil.getExcelReader(file);
@@ -152,6 +222,7 @@ public final class ExcelBs {
      * @since 0.0.4
      * @param <T> 泛型
      */
+    @SuppressWarnings("unchecked")
     public <T> List<T> read(Class<T> tClass) {
         IExcelReader excelReader = getExcelReader();
         return excelReader.readAll(tClass);
@@ -166,6 +237,7 @@ public final class ExcelBs {
      * @since 0.0.4
      * @param <T> 泛型
      */
+    @SuppressWarnings("unchecked")
     public <T> List<T> read(Class<T> tClass, final int startIndex, final int endIndex) {
         IExcelReader excelReader = getExcelReader();
         return excelReader.read(tClass, startIndex, endIndex);

@@ -11,6 +11,12 @@ public final class ExcelConst {
     private ExcelConst(){}
 
     /**
+     * 内部 excel 临时文件前缀
+     * @since 0.0.6
+     */
+    public static final String INNER_EXCEL_TEMP_PREFIX = "$INNER_EXCEL_TEMP_PREFIX$";
+
+    /**
      * 默认的 sheet 名称
      */
     public static final String DEFAULT_SHEET_NAME = "sheet1";

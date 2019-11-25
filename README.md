@@ -20,15 +20,15 @@
 
 - 设计简单，注释完整。方便大家学习改造。
 
+- 可根据注解指定表头顺序
+
 ## 变更日志
 
 > [变更日志](doc/CHANGELOG.md)
 
-## v0.0.5 主要变化
+## v0.0.6 主要特性
 
-- 新增 `@ExcelField#order` 属性，可指定列顺序。
-
-- 修复单元格为空时的 NPE 问题
+- 支持 excel 文件内容 bytes[] 内容获取，便于用户自定义操作。
 
 # 创作缘由
 
@@ -157,6 +157,8 @@ public void readTest() {
 [02-ExcelField 注解指定字段属性](doc/user/02-ExcelField注解使用说明.md)
 
 [03-ExcelField#order 指定列顺序](doc/user/03-ExcelField-order-列顺序指定.md)
+
+[04-ExcelBs#bytes 获取文件字节信息](doc/user/04-ExcelBs-bytes-获取文件字节信息.md)
 
 # Bug & Issues
 

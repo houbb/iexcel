@@ -4,7 +4,7 @@
 
     <groupId>com.github.houbb</groupId>
     <artifactId>iexcel</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.0.6</version>
 
     <properties>
         <!--============================== All Plugins START ==============================-->
@@ -26,7 +26,7 @@
         <project.compiler.level>1.7</project.compiler.level>
 
         <!--============================== INTER ==============================-->
-        <heaven.version>0.1.45</heaven.version>
+        <heaven.version>0.1.50</heaven.version>
 
         <!--============================== OTHER ==============================-->
         <junit.version>4.12</junit.version>
