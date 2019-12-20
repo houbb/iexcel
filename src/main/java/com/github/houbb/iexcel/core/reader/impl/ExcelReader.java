@@ -1,5 +1,7 @@
 package com.github.houbb.iexcel.core.reader.impl;
 
+import com.github.houbb.heaven.support.instance.impl.Instances;
+import com.github.houbb.heaven.util.guava.Guavas;
 import com.github.houbb.heaven.util.lang.StringUtil;
 import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
 import com.github.houbb.iexcel.annotation.ExcelField;
@@ -7,6 +9,7 @@ import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
+import com.github.houbb.iexcel.support.cache.InnerReaderCache;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -167,7 +170,8 @@ public class ExcelReader<T> implements IExcelReader<T> {
         final int firstCellNum = firstLineRow.getFirstCellNum();
         final int lastCellNum = firstLineRow.getLastCellNum();
 
-        Map<String, Field> readRequireFieldMap = readRequireFieldMap(tClass);
+        Map<String, Field> readRequireFieldMap = Instances.singleton(InnerReaderCache.class)
+                .get(tClass);
 
         if (containsHead) {
             // 包含表头的逻辑出路
@@ -209,11 +213,14 @@ public class ExcelReader<T> implements IExcelReader<T> {
      *
      * @param headRow 表头
      * @return map
+     * @since 0.0.7 显式指定 map size，避免扩容消耗。
      */
     private Map<String, Integer> cellHeadNameIndexMap(final Row headRow) {
-        Map<String, Integer> map = new HashMap<>();
         final int firstCellNum = headRow.getFirstCellNum();
         final int lastCellNum = headRow.getLastCellNum();
+        final int size = lastCellNum-firstCellNum;
+
+        Map<String, Integer> map = Guavas.newHashMap(size);
 
         for (int i = firstCellNum; i < lastCellNum; i++) {
             map.put(headRow.getCell(i).getStringCellValue(), i);
@@ -222,30 +229,31 @@ public class ExcelReader<T> implements IExcelReader<T> {
         return map;
     }
 
-    /**
-     * 获取需要读取的字段 map
-     *
-     * @param tClass 当前类信息
-     * @return map
-     */
-    private Map<String, Field> readRequireFieldMap(final Class<?> tClass) {
-        Map<String, Field> map = new HashMap<>();
-        List<Field> fieldList = ClassUtil.getAllFieldList(tClass);
-        for (Field field : fieldList) {
-            if (field.isAnnotationPresent(ExcelField.class)) {
-                ExcelField excelField = field.getAnnotation(ExcelField.class);
-                boolean readRequire = excelField.readRequire();
-                if (readRequire) {
-                    final String headName = InnerExcelUtil.getFieldHeadName(excelField, field);
-                    map.put(headName, field);
-                }
-            } else {
-                //@since0.0.4 默认使用 fieldName
-                final String headName = field.getName();
-                map.put(headName, field);
-            }
-        }
-        return map;
-    }
+//    /**
+//     * 获取需要读取的字段 map
+//     *
+//     * @param tClass 当前类信息
+//     * @return map
+//     */
+//    @Deprecated
+//    private Map<String, Field> readRequireFieldMap(final Class<?> tClass) {
+//        Map<String, Field> map = new HashMap<>();
+//        List<Field> fieldList = ClassUtil.getAllFieldList(tClass);
+//        for (Field field : fieldList) {
+//            if (field.isAnnotationPresent(ExcelField.class)) {
+//                ExcelField excelField = field.getAnnotation(ExcelField.class);
+//                boolean readRequire = excelField.readRequire();
+//                if (readRequire) {
+//                    final String headName = InnerExcelUtil.getFieldHeadName(excelField, field);
+//                    map.put(headName, field);
+//                }
+//            } else {
+//                //@since0.0.4 默认使用 fieldName
+//                final String headName = field.getName();
+//                map.put(headName, field);
+//            }
+//        }
+//        return map;
+//    }
 
 }

@@ -31,7 +31,9 @@ public interface IExcelWriter extends Closeable {
      * @param mapList map 集合
      * @param targetClass 目标类型
      * @return this
+     * @see #write(Collection) 建议将 map 转换为对象这部分单独实现，职责分离。保持纯粹。
      */
+    @Deprecated
     IExcelWriter write(Collection<Map<String, Object>> mapList, final Class<?> targetClass);
 
     /**
