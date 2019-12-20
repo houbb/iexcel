@@ -22,13 +22,15 @@
 
 - 可根据注解指定表头顺序
 
+- 支持 excel 文件内容 bytes[] 内容获取，便于用户自定义操作。
+
 ## 变更日志
 
 > [变更日志](doc/CHANGELOG.md)
 
-## v0.0.6 主要特性
+## v0.0.7 主要特性
 
-- 支持 excel 文件内容 bytes[] 内容获取，便于用户自定义操作。
+利用 cache 初步提升反射性能
 
 # 创作缘由
 
@@ -169,4 +171,3 @@ public void readTest() {
 如果你想参与到本项目中(编程，文档，测试，推广 etc)，可以发邮件到 `houbinbin.echo@gmail.com` 参与项目开发。
 
 或者直接提交 [PR](https://github.com/houbb/iexcel/pulls)
-
