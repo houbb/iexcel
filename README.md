@@ -44,6 +44,8 @@
 
 都或多或少难以满足自己的实际需要，于是就自己写了一个操作 excel 导出的工具。
 
+实现：在阿里 [easyexcel](https://github.com/alibaba/easyexcel) 的基础上进行封装，提升使用的简易度。
+
 # 快速开始
 
 ## 环境要求
