@@ -4,6 +4,7 @@ import com.github.houbb.heaven.util.nio.PathUtil;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
 import com.github.houbb.iexcel.sax.Sax03ExcelReader;
 import com.github.houbb.iexcel.test.model.ExcelFieldModel;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import java.util.List;
  * date 2018/11/19 15:50
  * @since 0.0.1
  */
+@Ignore
 public class Sax03ExcelReaderTest {
 
     @Test

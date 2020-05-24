@@ -6,6 +6,7 @@ import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.test.model.ExcelFieldModel;
 import com.github.houbb.iexcel.util.excel.ExcelUtil;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,6 +21,7 @@ import java.util.List;
  * @author binbin.hou
  * @date 2018/11/25
  */
+@Ignore
 public class ExcelUtilTest {
 
     /**
