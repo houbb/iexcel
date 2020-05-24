@@ -4,17 +4,20 @@
 
 避免大 excel 出现 oom，简约而不简单。
 
+[![Build Status](https://travis-ci.com/houbb/iexcel.svg?branch=master)](https://travis-ci.com/houbb/iexcel)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.houbb/iexcel/badge.svg)](http://mvnrepository.com/artifact/com.github.houbb/iexcel)
+[![](https://img.shields.io/badge/license-Apache2-FF0080.svg)](https://github.com/houbb/iexcel/blob/master/LICENSE.txt)
+[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/houbb/iexcel)
 
 # 特性
+
+- 一行代码搞定一切
 
 - OO 的方式操作 excel，编程更加方便优雅。
 
 - sax 模式读取，SXSS 模式写入。避免 excel 大文件 OOM。
 
 - 基于注解，编程更加灵活。
-
-- 写入可以基于对象列表，也可以基于 Map，实际使用更加方便。
 
 - 设计简单，注释完整。方便大家学习改造。
 
@@ -24,11 +27,11 @@
 
 ## 变更日志
 
-> [变更日志](doc/CHANGELOG.md)
+> [变更日志](CHANGELOG.md)
 
-## v0.0.7 主要特性
+## v0.0.8 主要变更
 
-利用 cache 初步提升反射性能
+新增 ExcelHelper，操作 excel 读写更加方便。
 
 # 创作缘由
 
@@ -62,7 +65,7 @@ maven 3.x
 <dependency>
      <groupId>com.github.houbb</groupId>
      <artifactId>iexcel</artifactId>
-     <version>${最新版本}</version>
+     <version>0.0.8</version>
 </dependency>
 ```
 
@@ -71,20 +74,12 @@ maven 3.x
 ### 示例
 
 ```java
-/**
- * 写入到 excel 文件
- * 直接将列表内容写入到文件
- */
-public void writeTest() {
-    // 待生成的 excel 文件路径
-    final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
+// 基本属性
+final String filePath = PathUtil.getAppTestResourcesPath()+"/excelHelper.xls";
+List<User> models = User.buildUserList();
 
-    // 对象列表
-    List<User> models = User.buildUserList();
-
-    // 直接写入到文件
-    ExcelBs.newInstance(filePath).write(models);
-}
+// 直接写入到文件
+ExcelHelper.write(filePath, models);
 ```
 
 其中：
@@ -135,15 +130,8 @@ excel	19
 ### 示例
 
 ```java
-/**
- * 读取 excel 文件中所有信息
- */
-public void readTest() {
-    // 待生成的 excel 文件路径
-    final String filePath = PathUtil.getAppTestResourcesPath()+"/excelWriter03.xls";
-    List<User> userList = ExcelBs.newInstance(filePath).read(User.class);
-    System.out.println(userList);
-}
+final String filePath = PathUtil.getAppTestResourcesPath()+"/excelHelper.xls";
+List<User> userList = ExcelHelper.read(filePath, User.class);
 ```
 
 ### 信息
@@ -166,8 +154,8 @@ public void readTest() {
 
 欢迎提出宝贵意见：[Bug & Issues](https://github.com/houbb/iexcel/issues)
 
-# 参与开发
+# 后期 Road-Map
 
-如果你想参与到本项目中(编程，文档，测试，推广 etc)，可以发邮件到 `houbinbin.echo@gmail.com` 参与项目开发。
+- [ ] 对于 excel 样式的注解支持
 
-或者直接提交 [PR](https://github.com/houbb/iexcel/pulls)
+- [ ] 丰富 ExcelHelper 常用方法
