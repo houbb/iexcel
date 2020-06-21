@@ -158,4 +158,6 @@ List<User> userList = ExcelHelper.read(filePath, User.class);
 
 - [ ] 对于 excel 样式的注解支持
 
+- [ ] 对于枚举值的注解支持
+ 
 - [ ] 丰富 ExcelHelper 常用方法
