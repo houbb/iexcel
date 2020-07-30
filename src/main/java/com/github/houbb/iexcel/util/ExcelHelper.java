@@ -3,6 +3,7 @@ package com.github.houbb.iexcel.util;
 import com.github.houbb.iexcel.bs.ExcelBs;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +27,18 @@ public final class ExcelHelper {
     public static void write(final String targetPath,
                              final Collection<?> collection) {
         ExcelBs.newInstance(targetPath).write(collection);
+    }
+
+    /**
+     * 写入到指定的 excel 文件
+     * @param targetPath 目标路径
+     * @param instance 单个对象
+     * @since 0.0.9
+     */
+    public static void write(final String targetPath,
+                             final Object instance) {
+        List<?> list = Collections.singletonList(instance);
+        write(targetPath, list);
     }
 
     /**

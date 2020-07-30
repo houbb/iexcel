@@ -43,7 +43,7 @@ public final class ExcelBs {
      * 待写入列表
      * @since 0.0.4
      */
-    private List writeBufferList = Guavas.newArrayList();
+    private final List writeBufferList = Guavas.newArrayList();
 
     /**
      * 指定文件路径

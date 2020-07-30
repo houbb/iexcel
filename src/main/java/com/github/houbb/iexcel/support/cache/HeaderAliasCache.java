@@ -48,6 +48,10 @@ public class HeaderAliasCache extends AbstractCache<Class, Map<String, String>> 
                 if (excel.writeRequire()) {
                     pair = Pair.of(fieldName, headName);
                     order = excel.order();
+                } else {
+                    // 跳过写入
+                    //FIXED: https://github.com/houbb/iexcel/issues/7
+                    continue;
                 }
             }
 

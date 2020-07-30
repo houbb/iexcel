@@ -29,9 +29,9 @@
 
 > [变更日志](CHANGELOG.md)
 
-## v0.0.8 主要变更
+## v0.0.9 主要变更
 
-新增 ExcelHelper，操作 excel 读写更加方便。
+Fixed [@ExcelField注解失效问题](https://github.com/houbb/iexcel/issues/7)
 
 # 创作缘由
 
@@ -65,7 +65,7 @@ maven 3.x
 <dependency>
      <groupId>com.github.houbb</groupId>
      <artifactId>iexcel</artifactId>
-     <version>0.0.8</version>
+     <version>0.0.9</version>
 </dependency>
 ```
 
@@ -156,8 +156,12 @@ List<User> userList = ExcelHelper.read(filePath, User.class);
 
 # 后期 Road-Map
 
-- [ ] 对于 excel 样式的注解支持
+- [ ] 是否有表头的指定
+
+- [ ] 添加类型转换支持
 
 - [ ] 对于枚举值的注解支持
- 
-- [ ] 丰富 ExcelHelper 常用方法
+
+- [ ] 对于样式的注解支持
+
+- [ ] 多 sheet 支持
