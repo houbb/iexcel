@@ -1,7 +1,10 @@
 package com.github.houbb.iexcel.sax;
 
 import com.github.houbb.iexcel.constant.ExcelConst;
+import com.github.houbb.iexcel.core.reader.AbstractExcelReader;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
+import com.github.houbb.iexcel.hutool.api.SaxReadHandler;
+import com.github.houbb.iexcel.sax.handler.SaxReadHandlerEmpty;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.impl.DefaultSaxRowHandler;
 
@@ -13,7 +16,8 @@ import java.util.List;
  * @author binbin.hou
  * date 2018/11/16 14:01
  */
-public abstract class AbstractSaxExcelReader<T> implements IExcelReader<T> {
+public abstract class AbstractSaxExcelReader<T> extends AbstractExcelReader<T>
+        implements IExcelReader<T> {
 
     //region 私有变量
     /**
@@ -36,7 +40,13 @@ public abstract class AbstractSaxExcelReader<T> implements IExcelReader<T> {
     /**
      * 每一行的处理器
      */
-    protected SaxRowHandler saxRowHandler;
+    protected SaxRowHandler saxRowHandler = new DefaultSaxRowHandler();
+
+    /**
+     * sax 的读处理类
+     */
+    protected SaxReadHandler<T> saxReadHandler = new SaxReadHandlerEmpty<T>();
+
     //endregion
 
     //region 对象初始化
@@ -47,7 +57,6 @@ public abstract class AbstractSaxExcelReader<T> implements IExcelReader<T> {
     public AbstractSaxExcelReader(File excelFile, int sheetIndex) {
         this.sheetIndex = sheetIndex;
         this.excelFile = excelFile;
-        saxRowHandler = new DefaultSaxRowHandler();
     }
 
     /**
@@ -69,11 +78,11 @@ public abstract class AbstractSaxExcelReader<T> implements IExcelReader<T> {
         this.saxRowHandler = saxRowHandler;
         return this;
     }
-    //endregion 对象初始化
 
-    @Override
-    public List<T> readAll(Class<T> tClass) {
-        return this.read(tClass, 0, Integer.MAX_VALUE);
+    public AbstractSaxExcelReader<T> saxReadHandler(SaxReadHandler<T> saxReadHandler) {
+        this.saxReadHandler = saxReadHandler;
+        return this;
     }
+    //endregion 对象初始化
 
 }

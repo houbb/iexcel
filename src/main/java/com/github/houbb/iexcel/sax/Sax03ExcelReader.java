@@ -3,14 +3,13 @@ package com.github.houbb.iexcel.sax;
 import com.github.houbb.heaven.constant.PunctuationConst;
 import com.github.houbb.heaven.util.lang.StringUtil;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
-import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandlerContext;
-import com.github.houbb.iexcel.sax.handler.impl.DefaultSaxRowHandler;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.poi.hssf.eventusermodel.*;
 import org.apache.poi.hssf.eventusermodel.dummyrecord.LastCellOfRowDummyRecord;
 import org.apache.poi.hssf.eventusermodel.dummyrecord.MissingCellDummyRecord;
 import org.apache.poi.hssf.model.HSSFFormulaParser;
+import org.apache.poi.hssf.record.Record;
 import org.apache.poi.hssf.record.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -99,11 +98,6 @@ public class Sax03ExcelReader<T> extends AbstractSaxExcelReader<T> implements HS
      * 当前 excel 的列信息和待转换类 Field 之间的关系
      */
     private Map<Integer, Field> indexFieldMap = new HashMap<>();
-
-    /**
-     * 行处理器
-     */
-    private SaxRowHandler rowHandler = new DefaultSaxRowHandler();
     //endregion
 
     //region 对象构建
@@ -273,8 +267,13 @@ public class Sax03ExcelReader<T> extends AbstractSaxExcelReader<T> implements HS
             context.setCellList(rowCellList);
             context.setIndexFieldMap(indexFieldMap);
 
-            T row = this.rowHandler.handle(context);
-            this.rowResultList.add(row);
+            T row = super.saxRowHandler.handle(context);
+
+            // 监听
+            boolean readFlag = super.saxReadHandler.handle(rowIndex, rowCellList, row);
+            if(readFlag) {
+                this.rowResultList.add(row);
+            }
         }
 
         clear();

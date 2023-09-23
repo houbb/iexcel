@@ -10,7 +10,11 @@ import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
 import com.github.houbb.iexcel.core.reader.IExcelReader;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
+import com.github.houbb.iexcel.hutool.api.SaxReadHandler;
+import com.github.houbb.iexcel.sax.AbstractSaxExcelReader;
+import com.github.houbb.iexcel.sax.handler.AbstractSaxReadHandler;
 import com.github.houbb.iexcel.util.excel.ExcelUtil;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.*;
 import java.util.Collection;
@@ -241,6 +245,21 @@ public final class ExcelBs {
     public <T> List<T> read(Class<T> tClass, final int startIndex, final int endIndex) {
         IExcelReader excelReader = getExcelReader();
         return excelReader.read(tClass, startIndex, endIndex);
+    }
+
+    /**
+     * sax 读
+     * @param tClass 类
+     * @param saxReadHandler 行处理类
+     */
+    public <T> void readBySax(final Class<T> tClass,
+                              AbstractSaxReadHandler<T> saxReadHandler,
+                              final int startIndex, final int endIndex) {
+        bigExcelMode = true;
+
+        AbstractSaxExcelReader<T> excelReader = (AbstractSaxExcelReader<T>) getExcelReader();
+        excelReader.saxReadHandler(saxReadHandler);
+        excelReader.read(tClass, startIndex, endIndex);
     }
 
 }

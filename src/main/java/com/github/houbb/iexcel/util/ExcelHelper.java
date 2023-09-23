@@ -1,6 +1,9 @@
 package com.github.houbb.iexcel.util;
 
 import com.github.houbb.iexcel.bs.ExcelBs;
+import com.github.houbb.iexcel.hutool.api.SaxReadHandler;
+import com.github.houbb.iexcel.sax.handler.AbstractSaxReadHandler;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +55,37 @@ public final class ExcelHelper {
     public static <T> List<T> read(final String targetPath,
                                    final Class<T> tClass) {
         return ExcelBs.newInstance(targetPath).read(tClass);
+    }
+
+    /**
+     * sax 读取
+     * @param tClass 类
+     * @param rowHandler 处理类
+     * @param targetPath 目标路径
+     * @param <T> 泛型
+     * @since 1.0.0
+     */
+    public static <T> void readBySax(final Class<T> tClass,
+                                     AbstractSaxReadHandler<T> rowHandler,
+                                     final String targetPath,
+                                     final int startIndex,
+                                     final int endIndex) {
+        ExcelBs.newInstance(targetPath)
+                .bigWriteMode(true)
+                .readBySax(tClass, rowHandler, startIndex, endIndex);
+    }
+
+    /**
+     * sax 读取
+     * @param tClass 类
+     * @param rowHandler 处理类
+     * @param targetPath 目标路径
+     * @param <T> 泛型
+     */
+    public static <T> void readBySax(final Class<T> tClass,
+                                     AbstractSaxReadHandler<T> rowHandler,
+                                     final String targetPath) {
+        readBySax(tClass, rowHandler, targetPath, 0, Integer.MAX_VALUE);
     }
 
 }

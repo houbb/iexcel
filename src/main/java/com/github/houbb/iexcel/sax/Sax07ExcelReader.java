@@ -267,7 +267,13 @@ public class Sax07ExcelReader<T> extends AbstractSaxExcelReader<T> implements Co
                 context.setIndexFieldMap(this.indexFieldMap);
                 context.setTargetClass(this.targetClass);
                 T row = rowHandler.handle(context);
-                this.rowResultList.add(row);
+
+                // 监听
+                boolean readFlag = super.saxReadHandler.handle(currentRow, rowCellList, row);
+                if(readFlag) {
+                    this.rowResultList.add(row);
+                }
+
                 clear();
             }
         }

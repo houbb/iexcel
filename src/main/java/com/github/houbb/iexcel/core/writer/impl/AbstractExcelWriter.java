@@ -7,10 +7,10 @@ import com.github.houbb.heaven.util.lang.BeanUtil;
 import com.github.houbb.heaven.util.lang.StringUtil;
 import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
 import com.github.houbb.heaven.util.util.CollectionUtil;
-import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.core.writer.IExcelWriter;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
 import com.github.houbb.iexcel.style.StyleSet;
 import com.github.houbb.iexcel.support.cache.HeaderAliasCache;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
@@ -167,10 +167,6 @@ public abstract class AbstractExcelWriter implements IExcelWriter {
         final String fieldName = field.getName();
         if (field.isAnnotationPresent(ExcelField.class)) {
             ExcelField column = field.getAnnotation(ExcelField.class);
-            final String mapKey = column.mapKey();
-            if (StringUtil.isNotBlank(mapKey)) {
-                return mapKey;
-            }
             return fieldName;
         }
         return fieldName;

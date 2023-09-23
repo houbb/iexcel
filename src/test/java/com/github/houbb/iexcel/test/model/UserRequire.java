@@ -1,6 +1,6 @@
 package com.github.houbb.iexcel.test.model;
 
-import com.github.houbb.iexcel.annotation.ExcelField;
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
 
 /**
  * @author binbin.hou

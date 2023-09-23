@@ -4,7 +4,7 @@ import com.github.houbb.heaven.annotation.ThreadSafe;
 import com.github.houbb.heaven.support.cache.impl.AbstractCache;
 import com.github.houbb.heaven.support.cache.impl.ClassFieldListCache;
 import com.github.houbb.heaven.util.guava.Guavas;
-import com.github.houbb.iexcel.annotation.ExcelField;
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 
 import java.lang.reflect.Field;

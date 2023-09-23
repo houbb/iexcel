@@ -1,6 +1,6 @@
 package com.github.houbb.iexcel.test.model;
 
-import com.github.houbb.iexcel.annotation.ExcelField;
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.List;
  */
 public class UserField {
 
-    @ExcelField(headName = "姓名")
+    @ExcelField(headerName =  "姓名")
     private String name;
 
-    @ExcelField(headName = "年龄")
+    @ExcelField(headerName =  "年龄")
     private int age;
 
     public String name() {

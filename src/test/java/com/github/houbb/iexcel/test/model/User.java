@@ -1,5 +1,7 @@
 package com.github.houbb.iexcel.test.model;
 
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
+
 import java.util.*;
 
 /**
@@ -9,8 +11,10 @@ import java.util.*;
  */
 public class User {
 
+    @ExcelField
     private String name;
 
+    @ExcelField
     private int age;
 
     public String name() {

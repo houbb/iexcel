@@ -1,7 +1,7 @@
 package com.github.houbb.iexcel.test.model;
 
 
-import com.github.houbb.iexcel.annotation.ExcelField;
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +16,13 @@ public class ExcelFieldModel {
     @ExcelField
     private String name;
 
-    @ExcelField(headName = "年龄")
+    @ExcelField(headerName =  "年龄")
     private String age;
 
-    @ExcelField(mapKey = "EMAIL", writeRequire = false, readRequire = false)
+    @ExcelField(writeRequire = false, readRequire = false)
     private String email;
 
-    @ExcelField(mapKey = "ADDRESS", headName = "地址", writeRequire = true)
+    @ExcelField(headerName = "地址", writeRequire = true)
     private String address;
 
     public String getName() {

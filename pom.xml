@@ -4,7 +4,7 @@
 
     <groupId>com.github.houbb</groupId>
     <artifactId>iexcel</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <!--============================== All Plugins START ==============================-->
@@ -23,10 +23,12 @@
 
         <!--============================== MAIN ==============================-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.compiler.level>1.7</project.compiler.level>
+        <project.compiler.level>1.8</project.compiler.level>
 
         <!--============================== INTER ==============================-->
-        <heaven.version>0.1.104</heaven.version>
+        <heaven.version>0.3.0</heaven.version>
+        <iexcel-hutool.version>1.7.0-SNAPSHOT</iexcel-hutool.version>
+        <converter.version>0.0.5-SNAPSHOT</converter.version>
 
         <!--============================== OTHER ==============================-->
         <junit.version>4.12</junit.version>
@@ -43,6 +45,16 @@
                 <groupId>com.github.houbb</groupId>
                 <artifactId>heaven</artifactId>
                 <version>${heaven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.houbb</groupId>
+                <artifactId>iexcel-hutool-api</artifactId>
+                <version>${iexcel-hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.houbb</groupId>
+                <artifactId>converter</artifactId>
+                <version>${converter.version}</version>
             </dependency>
 
             <!--============================== OTHER ==============================-->
@@ -85,6 +97,14 @@
         <dependency>
             <groupId>com.github.houbb</groupId>
             <artifactId>heaven</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>iexcel-hutool-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>converter</artifactId>
         </dependency>
 
         <!--============================== OTHER ==============================-->

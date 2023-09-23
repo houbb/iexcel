@@ -1,12 +1,10 @@
 package com.github.houbb.iexcel.util.excel;
 
-import com.github.houbb.heaven.constant.CharConst;
-import com.github.houbb.heaven.constant.PunctuationConst;
 import com.github.houbb.heaven.util.lang.StringUtil;
 import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
-import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
 import com.github.houbb.iexcel.style.StyleSet;
 import org.apache.poi.ss.usermodel.*;
 
@@ -60,7 +58,7 @@ public final class InnerExcelUtil {
      * @return map
      */
     private static Map<String, Field> readRequireFieldMap(final Class<?> tClass) {
-        Map<String, Field> map = new HashMap<>();
+        Map<String, Field> map = new LinkedHashMap<>();
         List<Field> fieldList = ClassUtil.getAllFieldList(tClass);
         for(Field field : fieldList) {
             if(field.isAnnotationPresent(ExcelField.class)) {
@@ -84,7 +82,7 @@ public final class InnerExcelUtil {
      */
     public static String getFieldHeadName(final ExcelField excelField, final Field field) {
         final String fieldName = field.getName();
-        String headName = excelField.headName();
+        String headName = excelField.headerName();
         return StringUtil.isNotBlank(headName) ? headName : fieldName;
     }
 

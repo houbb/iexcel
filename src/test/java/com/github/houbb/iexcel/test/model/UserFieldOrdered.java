@@ -1,6 +1,7 @@
 package com.github.houbb.iexcel.test.model;
 
-import com.github.houbb.iexcel.annotation.ExcelField;
+
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +13,13 @@ import java.util.List;
  */
 public class UserFieldOrdered {
 
-    @ExcelField(headName = "姓名", order = 1)
+    @ExcelField(headerName =  "姓名", order = 1)
     private String name;
 
-    @ExcelField(headName = "年龄", order = 2)
+    @ExcelField(headerName =  "年龄", order = 2)
     private int age;
 
-    @ExcelField(headName = "地址", order = 0)
+    @ExcelField(headerName =  "地址", order = 0)
     private String address;
 
     public String getName() {

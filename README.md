@@ -53,7 +53,7 @@ Fixed [@ExcelField注解失效问题](https://github.com/houbb/iexcel/issues/7)
 
 ## 环境要求
 
-jdk1.7+
+jdk1.8+
 
 maven 3.x
 
@@ -65,7 +65,7 @@ maven 3.x
 <dependency>
      <groupId>com.github.houbb</groupId>
      <artifactId>iexcel</artifactId>
-     <version>0.0.9</version>
+     <version>1.0.0</version>
 </dependency>
 ```
 
@@ -138,6 +138,22 @@ List<User> userList = ExcelHelper.read(filePath, User.class);
 
 ```
 [User{name='hello', age=20}, User{name='excel', age=19}]
+```
+
+## SAX 读
+
+```java
+// 待生成的 excel 文件路径
+final String filePath = PathUtil.getAppTestResourcesPath()+"/excelReadBySax.xls";
+
+        AbstractSaxReadHandler<User> saxReadHandler = new AbstractSaxReadHandler<User>() {
+            @Override
+            protected void doHandle(int i, List<Object> list, User user) {
+                System.out.println(user);
+            }
+        };
+
+ExcelHelper.readBySax(User.class, saxReadHandler, filePath);
 ```
 
 # 文档

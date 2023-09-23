@@ -62,4 +62,5 @@ public class SaxRowHandlerContext<T> {
     public void setIndexFieldMap(Map<Integer, Field> indexFieldMap) {
         this.indexFieldMap = indexFieldMap;
     }
+
 }

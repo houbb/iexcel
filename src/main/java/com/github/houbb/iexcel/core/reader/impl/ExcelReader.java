@@ -1,13 +1,12 @@
 package com.github.houbb.iexcel.core.reader.impl;
 
+import com.github.houbb.converter.utils.ConverterHelper;
 import com.github.houbb.heaven.support.instance.impl.Instances;
 import com.github.houbb.heaven.util.guava.Guavas;
 import com.github.houbb.heaven.util.lang.StringUtil;
-import com.github.houbb.heaven.util.lang.reflect.ClassUtil;
-import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.constant.ExcelConst;
 import com.github.houbb.iexcel.constant.enums.ExcelTypeEnum;
-import com.github.houbb.iexcel.core.reader.IExcelReader;
+import com.github.houbb.iexcel.core.reader.AbstractExcelReader;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.support.cache.InnerReaderCache;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
@@ -33,7 +32,7 @@ import java.util.*;
  * date 2018/11/15 20:00
  * @since 0.0.1
  */
-public class ExcelReader<T> implements IExcelReader<T> {
+public class ExcelReader<T> extends AbstractExcelReader<T> {
 
     /**
      * 当前 sheet 的信息
@@ -125,7 +124,9 @@ public class ExcelReader<T> implements IExcelReader<T> {
                     if (null != cell) {
                         cellValue = InnerExcelUtil.getCellValue(cell, cell.getCellTypeEnum(), fieldType);
                     }
-                    field.set(instance, cellValue);
+
+                    Object targetValue = ConverterHelper.transfer(cellValue, field.getType());
+                    field.set(instance, targetValue);
                 }
 
                 resultList.add(instance);
@@ -228,32 +229,5 @@ public class ExcelReader<T> implements IExcelReader<T> {
 
         return map;
     }
-
-//    /**
-//     * 获取需要读取的字段 map
-//     *
-//     * @param tClass 当前类信息
-//     * @return map
-//     */
-//    @Deprecated
-//    private Map<String, Field> readRequireFieldMap(final Class<?> tClass) {
-//        Map<String, Field> map = new HashMap<>();
-//        List<Field> fieldList = ClassUtil.getAllFieldList(tClass);
-//        for (Field field : fieldList) {
-//            if (field.isAnnotationPresent(ExcelField.class)) {
-//                ExcelField excelField = field.getAnnotation(ExcelField.class);
-//                boolean readRequire = excelField.readRequire();
-//                if (readRequire) {
-//                    final String headName = InnerExcelUtil.getFieldHeadName(excelField, field);
-//                    map.put(headName, field);
-//                }
-//            } else {
-//                //@since0.0.4 默认使用 fieldName
-//                final String headName = field.getName();
-//                map.put(headName, field);
-//            }
-//        }
-//        return map;
-//    }
 
 }

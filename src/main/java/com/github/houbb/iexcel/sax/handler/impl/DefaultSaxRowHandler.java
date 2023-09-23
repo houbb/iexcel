@@ -1,5 +1,6 @@
 package com.github.houbb.iexcel.sax.handler.impl;
 
+import com.github.houbb.converter.utils.ConverterHelper;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandler;
 import com.github.houbb.iexcel.sax.handler.SaxRowHandlerContext;
@@ -27,8 +28,12 @@ public class DefaultSaxRowHandler implements SaxRowHandler {
                 Field field = map.get(index);
                 field.setAccessible(true);
                 final Object cellValue = cellList.get(index);
-                field.set(instance, cellValue);
+
+                // 只处理
+                Object targetValue = ConverterHelper.transfer(cellValue, field.getType());
+                field.set(instance, targetValue);
             }
+
             return instance;
         } catch (InstantiationException | IllegalAccessException e) {
             throw new ExcelRuntimeException(e);

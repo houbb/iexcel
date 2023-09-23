@@ -6,8 +6,8 @@ import com.github.houbb.heaven.support.cache.impl.ClassFieldListCache;
 import com.github.houbb.heaven.support.tuple.impl.Pair;
 import com.github.houbb.heaven.util.guava.Guavas;
 import com.github.houbb.heaven.util.lang.ObjectUtil;
-import com.github.houbb.iexcel.annotation.ExcelField;
 import com.github.houbb.iexcel.exception.ExcelRuntimeException;
+import com.github.houbb.iexcel.hutool.annotation.ExcelField;
 import com.github.houbb.iexcel.util.excel.InnerExcelUtil;
 import org.apache.commons.collections4.MapUtils;
 
