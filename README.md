@@ -156,15 +156,23 @@ final String filePath = PathUtil.getAppTestResourcesPath()+"/excelReadBySax.xls"
 ExcelHelper.readBySax(User.class, saxReadHandler, filePath);
 ```
 
-# 文档
+# 拓展阅读
 
-[01-ExcelBs 引导类使用说明](doc/user/01-ExcelBs引导类讲解.md)
+[Excel Export 踩坑注意点+导出方案设计](https://houbb.github.io/2016/07/19/java-tool-excel-export-design-01-overview)
 
-[02-ExcelField 注解指定字段属性](doc/user/02-ExcelField注解使用说明.md)
+[基于 hutool 的 EXCEL 优化实现](https://houbb.github.io/2016/07/19/java-tool-excel-hutool-opt-01-intro)
 
-[03-ExcelField#order 指定列顺序](doc/user/03-ExcelField-order-列顺序指定.md)
+[iexcel-excel 大文件读取和写入，解决 excel OOM 问题-01-入门介绍](https://houbb.github.io/2016/07/19/java-tool-excel-iexcel-01-intro)
 
-[04-ExcelBs#bytes 获取文件字节信息](doc/user/04-ExcelBs-bytes-获取文件字节信息.md)
+[iexcel-excel 大文件读取和写入-02-Excel 引导类简介](https://houbb.github.io/2016/07/19/java-tool-excel-iexcel-02-excelbs)
+
+[iexcel-excel 大文件读取和写入-03-@ExcelField 注解介绍](https://houbb.github.io/2016/07/19/java-tool-excel-iexcel-03-excelField)
+
+[iexcel-excel 大文件读取和写入-04-order 指定列顺序](https://houbb.github.io/2016/07/19/java-tool-excel-iexcel-04-order)
+
+[iexcel-excel 大文件读取和写入-05-file bytes 获取文件字节信息](https://houbb.github.io/2016/07/19/java-tool-excel-iexcel-05-file-bytes)
+
+[Aapche POI java excel 操作工具包入门](https://houbb.github.io/2016/07/19/java-tool-excel-poi-01-intro)
 
 # Bug & Issues
 
